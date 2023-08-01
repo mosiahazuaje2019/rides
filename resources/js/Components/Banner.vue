@@ -8,6 +8,11 @@ const style = computed(
 );
 const message = computed(() => usePage().props.jetstream.flash?.banner || "");
 
+// v-if="$page.props.auth.user"
+
+// console.log("que fue men");
+// console.log(usePage().props.auth.user.profile === "Admin");
+
 watch(message, async () => {
     show.value = true;
 });
