@@ -3,8 +3,9 @@ import DataTable from "primevue/datatable";
 import InputText from "primevue/inputtext";
 import InputNumber from "primevue/inputnumber";
 import Column from "primevue/column";
-import { FilterMatchMode, FilterService } from "primevue/api";
-import { ref } from "vue";
+import {FilterMatchMode,FilterOperator} from 'primevue/api';
+import { ref, onMounted } from "vue";
+
 
 const components = {
     DataTable,
@@ -38,11 +39,11 @@ const columns = [
 
 let rides = [
     {
-        request_id: "15285",
-        driver: "Elieser Reyes",
+        request_id: "15282",
+        driver: "Juan Rey",
         pax: "2:2",
         service: "LLegada",
-        client_name: "Alex Garcia",
+        client_name: "Alex Rodriguez",
         hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
         flight: "AA#123",
         date: "July 28, 2023",
@@ -319,6 +320,12 @@ let rides = [
     },
 ];
 
+const filters = ref({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    client_name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    driver: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+});
+
 function onCellEditComplete(event) {
     let { data, newValue, field } = event;
     data[field] = newValue;
@@ -328,9 +335,7 @@ function onCellEditComplete(event) {
     console.log({ field });
 }
 
-const filters = ref({
-    client_name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-});
+
 </script>
 
 <style lang="scss" scoped>
@@ -356,26 +361,23 @@ const filters = ref({
             @cell-edit-complete="onCellEditComplete"
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
-            filterDisplay="row"
+            :globalFilterFields="['client_name','driver']"
         >
+            <template #header>
+                <div class="flex justify-content-center">
+                    <span class="p-input-icon-left w-full">
+                        <i class="pi pi-search" />
+                        <InputText v-model="filters['global'].value" placeholder="Buscar" class="w-full" />
+                    </span>
+                </div>
+            </template>
+
             <Column
                 v-for="col of columns"
                 :key="col.field"
                 :field="col.field"
                 :header="col.header"
             >
-                <template
-                    v-if="col.field === 'client_name'"
-                    #filter="{ filterModel, filterCallback }"
-                >
-                    <InputText
-                        v-model="filterModel.value"
-                        type="text"
-                        @input="filterCallback()"
-                        class="p-column-filter"
-                        :placeholder="`Search by Client`"
-                    />
-                </template>
                 <template #editor="{ data, field }">
                     <InputText v-model="data[field]" autofocus class="w-full" />
                 </template>
