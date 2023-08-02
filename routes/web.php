@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\api\v1\UserController;
+use App\Http\Controllers\api\v1\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +43,5 @@ Route::middleware([
 
 Route::group(['prefix' => 'api/v1'], function () {
     Route::apiResource('users', UserController::class);
+    Route::apiResource('bookings', BookingController::class);
 });
