@@ -44,4 +44,8 @@ Route::middleware([
 Route::group(['prefix' => 'api/v1'], function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('bookings', BookingController::class);
+
+    //User custom routes GET
+    Route::get('get_drivers', [UserController::class,'get_drivers']);
+
 });

@@ -34,32 +34,37 @@ class BookingController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(BookingStoreRequest $request): JsonResponse
     {
-        //
+        $booking = $this->booking->create($request->all());
+        return response()->json(new BookiingResource($booking), 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Booking $booking)
+    public function show(Booking $booking): JsonResponse
     {
-        //
+        return response()->json(
+            new BookingResource($booking)
+        );
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Booking $booking)
+    public function update(BookingUpdateRequest $request, Booking $booking): JsonResponse
     {
-        //
+        $booking->update($request->all());
+        return response()->json(new BookingResource($booking));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Booking $booking)
+    public function destroy(Booking $booking): JsonResponse
     {
-        //
+        $booking->delete();
+        return response()->json(null,204);
     }
 }
