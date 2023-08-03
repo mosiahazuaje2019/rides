@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Http\Resources\BookingResource;
 use App\Http\Resources\BookingCollection;
-use App\Http\Request\Booking\BookingStoreRequest;
-use App\Http\Request\Booking\BookingUpdateRequest;
+use App\Http\Requests\Booking\BookingStoreRequest;
+use App\Http\Requests\Booking\BookingUpdateRequest;
 
 use Illuminate\Http\JsonResponse;
 
@@ -37,7 +37,7 @@ class BookingController extends Controller
     public function store(BookingStoreRequest $request): JsonResponse
     {
         $booking = $this->booking->create($request->all());
-        return response()->json(new BookiingResource($booking), 201);
+        return response()->json(new BookingResource($booking), 201);
     }
 
     /**

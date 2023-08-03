@@ -7,8 +7,8 @@
 
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
-import BookingAdmin from "@/Components/BookingAdmin.vue";
-import BookingDriver from "@/Components/BookingDriver.vue";
+import BookingAdmin from "@/Pages/Bookings/BookingAdmin.vue";
+import BookingDriver from "@/Pages/Bookings/BookingDriver.vue";
 import { usePage } from "@inertiajs/vue3";
 
 const is_mobile = isMobile();

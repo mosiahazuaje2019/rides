@@ -35,9 +35,7 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
-    Route::get('/booking', function () {
-        return Inertia::render('Booking');
-    })->name('booking');
+    Route::get('/booking', function () { return Inertia::render('Bookings/index'); })->name('booking');
     Route::get('user', function () { return Inertia::render('Users/index'); })->name('user');
 });
 
