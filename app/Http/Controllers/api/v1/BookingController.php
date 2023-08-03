@@ -8,6 +8,7 @@ use App\Http\Resources\BookingResource;
 use App\Http\Resources\BookingCollection;
 use App\Http\Requests\Booking\BookingStoreRequest;
 use App\Http\Requests\Booking\BookingUpdateRequest;
+use Carbon\Carbon;
 
 use Illuminate\Http\JsonResponse;
 
@@ -26,7 +27,7 @@ class BookingController extends Controller
     {
         return response()->json(
             new BookingCollection(
-                $this->booking->orderBy('id','desc')->get()
+                $this->booking->orderBy('time','asc')->get()
             )
         );
     }
@@ -55,7 +56,11 @@ class BookingController extends Controller
      */
     public function update(BookingUpdateRequest $request, Booking $booking): JsonResponse
     {
-        $booking->update($request->all());
+        $bookingData = $request->all();
+        $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
+        $bookingData['time'] = Carbon::parse($request->time)->format('H:i:s');
+
+        $booking->update($bookingData);
         return response()->json(new BookingResource($booking));
     }
 

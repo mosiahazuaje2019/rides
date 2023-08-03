@@ -110,7 +110,7 @@ function onCellEditComplete(event) {
         <div class="flex justify-center my-20">
             <h3>Booking</h3>
         </div>
-        {{ drivers }}
+
         <DataTable
             v-model:filters="filters"
             showGridlines
@@ -125,6 +125,16 @@ function onCellEditComplete(event) {
             :globalFilterFields="['client_name', 'driver']"
         >
             <template #header>
+                <div class="flex justify-content-center">
+                    <span class="p-input-icon-left w-full">
+                        <Calendar v-model="date" />
+                    </span>
+                </div>
+                <div class="flex justify-end">
+                    <span class="p-input-icon-left w-full">
+                        <Button icon="pi pi-plus" aria-label="Nuevo" />
+                    </span>
+                </div>
                 <div class="flex justify-content-center">
                     <span class="p-input-icon-left w-full">
                         <i class="pi pi-search" />
