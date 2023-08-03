@@ -42,6 +42,7 @@ const services = [
 
 let drivers = ref([]);
 let rides = ref([]);
+let searchdate = ref();
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -111,6 +112,13 @@ function onCellEditComplete(event) {
             <h3>Booking</h3>
         </div>
 
+        <div class="flex justify-end mb-2">
+            <span class="p-input-icon-left w-full">
+                <Button icon="pi pi-plus" aria-label="Nuevo" class="float-right" />
+                <Calendar v-model="searchdate" showIcon dateFormat="dd/mm/yy" class="float-right mr-2" />
+            </span>
+        </div>
+
         <DataTable
             v-model:filters="filters"
             showGridlines
@@ -125,17 +133,7 @@ function onCellEditComplete(event) {
             :globalFilterFields="['client_name', 'driver']"
         >
             <template #header>
-                <div class="flex justify-content-center">
-                    <span class="p-input-icon-left w-full">
-                        <Calendar v-model="date" />
-                    </span>
-                </div>
-                <div class="flex justify-end">
-                    <span class="p-input-icon-left w-full">
-                        <Button icon="pi pi-plus" aria-label="Nuevo" />
-                    </span>
-                </div>
-                <div class="flex justify-content-center">
+                <div class="flex justify-content-center  mt-2">
                     <span class="p-input-icon-left w-full">
                         <i class="pi pi-search" />
                         <InputText
@@ -171,7 +169,7 @@ function onCellEditComplete(event) {
                         class="w-full md:w-14rem"
                     />
 
-                    <Calendar v-if="field === 'date'" v-model="data[field]" />
+                    <Calendar v-if="field === 'date'" v-model="data[field]" dateFormat="dd/mm/yy" />
                     <Calendar
                         v-if="field === 'time'"
                         v-model="data.time"
