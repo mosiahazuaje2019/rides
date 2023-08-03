@@ -27,7 +27,9 @@ class BookingController extends Controller
     {
         return response()->json(
             new BookingCollection(
-                $this->booking->orderBy('time','asc')->get()
+                $this->booking
+                        ->where('date', Carbon::now()->format('Y-m-d'))
+                        ->orderBy('time','asc')->get()
             )
         );
     }
