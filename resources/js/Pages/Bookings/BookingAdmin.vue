@@ -9,6 +9,16 @@ import { FilterMatchMode, FilterOperator } from "primevue/api";
 import { ref, onMounted } from "vue";
 import { RideService } from "@/Services/RideService";
 import { DriverService } from "@/Services/DriverService";
+import BookingCreateForm from "./BookingCreateForm.vue";
+
+// const emit = defineEmits({
+//     create_booking: (bookingForm) => {
+//         RideService.createRide(bookingForm);
+//         this.modalDisplay = false;
+//         // modalDisplay = false;
+//         // console.log(bookingForm);
+//     },
+// });
 
 const components = {
     DataTable,
@@ -17,6 +27,7 @@ const components = {
     InputNumber,
     Dropdown,
     Calendar,
+    BookingCreateForm,
 };
 
 const columns = [
@@ -43,6 +54,7 @@ const services = [
 let drivers = ref([]);
 let rides = ref([]);
 let searchdate = ref();
+let modalDisplay = ref(false);
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -67,9 +79,18 @@ let form = {
 };
 
 onMounted(() => {
-    RideService.getRides().then((data) => (rides.value = data));
+    RideService.getRides().then((data) => {
+        rides.value = data;
+        form = data;
+    });
+
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
+
+const createBooking = (bookingForm) => {
+    RideService.createRide(bookingForm);
+    modalDisplay.value = false;
+};
 
 function onCellEditComplete(event) {
     let { data, newValue, field } = event;
@@ -84,18 +105,11 @@ function onCellEditComplete(event) {
         data[field] = newValue;
     }
 
-    // form = data;
     Object.keys(form).forEach(function (key) {
         form[key] = data[key];
     });
 
     RideService.updateRide(form);
-
-    console.log("*****************************");
-    console.log(form);
-    console.log("*****************************");
-    console.log({ newValue });
-    console.log({ field });
 }
 </script>
 
@@ -107,6 +121,19 @@ function onCellEditComplete(event) {
 </style>
 
 <template>
+    <Dialog
+        modal
+        header="Create booking"
+        :style="{ width: '60vw' }"
+        v-model:visible="modalDisplay"
+    >
+        <BookingCreateForm
+            :drivers="drivers"
+            :services="services"
+            @createBooking="createBooking"
+        />
+    </Dialog>
+
     <div class="card px-6">
         <div class="flex justify-center my-20">
             <h3>Booking</h3>
@@ -114,14 +141,24 @@ function onCellEditComplete(event) {
 
         <div class="flex justify-end mb-2">
             <span class="p-input-icon-left w-full">
-                <Button icon="pi pi-plus" aria-label="Nuevo" class="float-right" />
-                <Calendar v-model="searchdate" showIcon dateFormat="dd/mm/yy" class="float-right mr-2" />
+                <Button
+                    icon="pi pi-plus"
+                    aria-label="Nuevo"
+                    class="float-right"
+                    :onclick="() => (modalDisplay = true)"
+                />
+                <Calendar
+                    v-model="searchdate"
+                    showIcon
+                    showButtonBar
+                    dateFormat="dd/mm/yy"
+                    class="float-right mr-2"
+                />
             </span>
         </div>
 
         <DataTable
             v-model:filters="filters"
-            showGridlines
             paginator
             :rows="5"
             :rowsPerPageOptions="[5, 10, 20, 50]"
@@ -133,7 +170,7 @@ function onCellEditComplete(event) {
             :globalFilterFields="['client_name', 'driver']"
         >
             <template #header>
-                <div class="flex justify-content-center  mt-2">
+                <div class="flex justify-content-center mt-2">
                     <span class="p-input-icon-left w-full">
                         <i class="pi pi-search" />
                         <InputText
@@ -169,7 +206,11 @@ function onCellEditComplete(event) {
                         class="w-full md:w-14rem"
                     />
 
-                    <Calendar v-if="field === 'date'" v-model="data[field]" dateFormat="dd/mm/yy" />
+                    <Calendar
+                        v-if="field === 'date'"
+                        v-model="data.date"
+                        dateFormat="dd/mm/yy"
+                    />
                     <Calendar
                         v-if="field === 'time'"
                         v-model="data.time"
@@ -205,7 +246,11 @@ function onCellEditComplete(event) {
                             class="w-full md:w-14rem"
                         />
 
-                        <Calendar v-if="field === 'date'" v-model="data.date" />
+                        <Calendar
+                            v-if="field === 'date'"
+                            v-model="data.date"
+                            showButtonBar
+                        />
                         <Calendar
                             v-if="field === 'time'"
                             v-model="data.time"
