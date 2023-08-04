@@ -15,6 +15,10 @@ class RideService {
         const ride_id = 1;
         await axios.put(`/api/v1/bookings/${ride.id}`, ride);
     }
+
+    static async createRide(ride) {
+        await axios.post(`/api/v1/bookings/`, ride);
+    }
 }
 
 export { RideService };
