@@ -12,15 +12,6 @@ import { DriverService } from "@/Services/DriverService";
 import BookingCreateForm from "./BookingCreateForm.vue";
 import { useToast } from "primevue/usetoast";
 
-// const emit = defineEmits({
-//     create_booking: (bookingForm) => {
-//         RideService.createRide(bookingForm);
-//         this.modalDisplay = false;
-//         // modalDisplay = false;
-//         // console.log(bookingForm);
-//     },
-// });
-
 const toast = useToast();
 
 const components = {
@@ -81,10 +72,13 @@ let form = {
     extras: null,
 };
 
+const unixTimestamp = moment("2012.08.10", "YYYY.MM.DD").unix();
+
+console.log({ unixTimestamp });
+
 onMounted(() => {
     RideService.getRides().then((data) => {
         rides.value = data;
-        form = data;
     });
 
     DriverService.getDrivers().then((data) => (drivers.value = data));
@@ -97,7 +91,12 @@ const createBooking = (bookingForm) => {
         rides.value = data;
         form = data;
     });
-    toast.add({ severity: 'info', summary: 'Info', detail: 'Se guardo exitosamente', life: 3000 });
+    toast.add({
+        severity: "info",
+        summary: "Info",
+        detail: "Se guardo exitosamente",
+        life: 3000,
+    });
 };
 
 function onCellEditComplete(event) {
@@ -257,6 +256,7 @@ function onCellEditComplete(event) {
                         <Calendar
                             v-if="field === 'date'"
                             v-model="data[field]"
+                            dateFormat="dd/mm/yy"
                             showButtonBar
                         />
                         <Calendar
