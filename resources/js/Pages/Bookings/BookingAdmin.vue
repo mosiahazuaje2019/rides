@@ -11,16 +11,6 @@ import { RideService } from "@/Services/RideService";
 import { DriverService } from "@/Services/DriverService";
 import BookingCreateForm from "./BookingCreateForm.vue";
 import { useToast } from "primevue/usetoast";
-import moment from "moment";
-
-// const emit = defineEmits({
-//     create_booking: (bookingForm) => {
-//         RideService.createRide(bookingForm);
-//         this.modalDisplay = false;
-//         // modalDisplay = false;
-//         // console.log(bookingForm);
-//     },
-// });
 
 const toast = useToast();
 
