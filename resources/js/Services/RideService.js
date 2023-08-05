@@ -4,7 +4,7 @@ class RideService {
     static getRides() {
         return axios
             .get("/api/v1/bookings")
-            .then((response) => response.data)
+            .then((response) => response.data )
             .catch((error) => {
                 console.error("Error al obtener los viajes:", error);
                 return [];

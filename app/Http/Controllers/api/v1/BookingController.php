@@ -39,7 +39,11 @@ class BookingController extends Controller
      */
     public function store(BookingStoreRequest $request): JsonResponse
     {
-        $booking = $this->booking->create($request->all());
+        $bookingData = $request->all();
+        $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
+        $bookingData['time'] = Carbon::parse($request->time)->format('H:i:s');
+
+        $booking = $this->booking->create($bookingData);
         return response()->json(new BookingResource($booking), 201);
     }
 
