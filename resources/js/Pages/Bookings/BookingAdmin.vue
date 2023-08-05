@@ -10,6 +10,7 @@ import { ref, onMounted } from "vue";
 import { RideService } from "@/Services/RideService";
 import { DriverService } from "@/Services/DriverService";
 import BookingCreateForm from "./BookingCreateForm.vue";
+import { useToast } from "primevue/usetoast";
 
 // const emit = defineEmits({
 //     create_booking: (bookingForm) => {
@@ -19,6 +20,8 @@ import BookingCreateForm from "./BookingCreateForm.vue";
 //         // console.log(bookingForm);
 //     },
 // });
+
+const toast = useToast();
 
 const components = {
     DataTable,
@@ -90,6 +93,11 @@ onMounted(() => {
 const createBooking = (bookingForm) => {
     RideService.createRide(bookingForm);
     modalDisplay.value = false;
+    RideService.getRides().then((data) => {
+        rides.value = data;
+        form = data;
+    });
+    toast.add({ severity: 'info', summary: 'Info', detail: 'Se guardo exitosamente', life: 3000 });
 };
 
 function onCellEditComplete(event) {
@@ -198,7 +206,7 @@ function onCellEditComplete(event) {
                 >
                     <Dropdown
                         v-if="field === 'driver_id'"
-                        v-model="data.driver_id"
+                        v-model="data[field]"
                         :options="drivers"
                         optionLabel="full_name"
                         optionValue="id"
@@ -208,12 +216,12 @@ function onCellEditComplete(event) {
 
                     <Calendar
                         v-if="field === 'date'"
-                        v-model="data.date"
+                        v-model="data[field]"
                         dateFormat="dd/mm/yy"
                     />
                     <Calendar
                         v-if="field === 'time'"
-                        v-model="data.time"
+                        v-model="data[field]"
                         timeOnly
                     />
                 </template>
@@ -229,7 +237,7 @@ function onCellEditComplete(event) {
                     >
                         <Dropdown
                             v-if="field === 'driver_id'"
-                            v-model="data.driver_id"
+                            v-model="data[field]"
                             :options="drivers"
                             optionLabel="full_name"
                             optionValue="id"
@@ -238,7 +246,7 @@ function onCellEditComplete(event) {
                         />
                         <Dropdown
                             v-if="field === 'service'"
-                            v-model="data.service"
+                            v-model="data[field]"
                             :options="services"
                             optionLabel="service_name"
                             optionValue="service_name"
@@ -248,12 +256,12 @@ function onCellEditComplete(event) {
 
                         <Calendar
                             v-if="field === 'date'"
-                            v-model="data.date"
+                            v-model="data[field]"
                             showButtonBar
                         />
                         <Calendar
                             v-if="field === 'time'"
-                            v-model="data.time"
+                            v-model="data[field]"
                             timeOnly
                         />
                     </template>
