@@ -72,8 +72,6 @@ let form = {
     extras: null,
 };
 
-const unixTimestamp = moment("2012.08.10", "YYYY.MM.DD").unix();
-
 console.log({ unixTimestamp });
 
 onMounted(() => {
