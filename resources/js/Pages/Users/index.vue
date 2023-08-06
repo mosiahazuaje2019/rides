@@ -15,7 +15,7 @@
             </h2>
         </template>
 
-        <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        <div class="px-4 mt-2">
             <DataTable :value="users" dataKey="id" tableStyle="min-width: 50rem"
                         :paginator="true"
                         :rows="5"
