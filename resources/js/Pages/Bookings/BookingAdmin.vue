@@ -171,6 +171,8 @@ function onCellEditComplete(event) {
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
             :globalFilterFields="['client_name', 'driver']"
+            scrollable scrollHeight="400px"
+            resizableColumns columnResizeMode="fit"
         >
             <template #header>
                 <div class="flex justify-content-center mt-2">
