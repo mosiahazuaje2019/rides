@@ -19,7 +19,7 @@ use App\Http\Controllers\api\v1\BookingController;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -45,5 +45,8 @@ Route::group(['prefix' => 'api/v1'], function () {
 
     //User custom routes GET
     Route::get('get_drivers', [UserController::class,'get_drivers']);
+
+    //Booking custom routes POST
+    Route::post('cabosrwh', [BookingController::class,'cabosrwh']);
 
 });

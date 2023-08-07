@@ -1,5 +1,10 @@
 <template>
     <AppLayout title="Booking">
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                Booking
+            </h2>
+        </template>
         <BookingAdmin v-if="is_admin" />
         <BookingDriver v-else />
         <Toast />

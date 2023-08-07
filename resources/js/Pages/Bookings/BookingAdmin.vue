@@ -72,7 +72,9 @@ let form = {
     extras: null,
 };
 
-console.log({ unixTimestamp });
+//const unixTimestamp = moment("2012.08.10", "YYYY.MM.DD").unix();
+
+//console.log({ unixTimestamp });
 
 onMounted(() => {
     RideService.getRides().then((data) => {
@@ -139,12 +141,8 @@ function onCellEditComplete(event) {
         />
     </Dialog>
 
-    <div class="card px-6">
-        <div class="flex justify-center my-20">
-            <h3>Booking</h3>
-        </div>
-
-        <div class="flex justify-end mb-2">
+    <div class="card px-4 rounded-md">
+        <div class="flex justify-end mb-2 mt-2">
             <span class="p-input-icon-left w-full">
                 <Button
                     icon="pi pi-plus"
@@ -173,6 +171,10 @@ function onCellEditComplete(event) {
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
             :globalFilterFields="['client_name', 'driver']"
+            scrollable
+            scrollHeight="400px"
+            resizableColumns
+            columnResizeMode="fit"
         >
             <template #header>
                 <div class="flex justify-content-center mt-2">
