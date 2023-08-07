@@ -78,4 +78,14 @@ class BookingController extends Controller
         $booking->delete();
         return response()->json(null,204);
     }
+
+    public function cabosrwh(BookingStoreRequest $request):JsonResponse
+    {
+        $bookingData = $request->all();
+        $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
+        $bookingData['time'] = Carbon::parse($request->time)->format('H:i:s');
+
+        $booking = $this->booking->create($bookingData);
+        return response()->json(new BookingResource($booking), 201);
+    }
 }
