@@ -52,8 +52,9 @@ let modalDisplay = ref(false);
 
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    client_name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    driver: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    request_id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+    client_name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    driver: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
 let form = {
@@ -72,10 +73,6 @@ let form = {
     extras: null,
 };
 
-//const unixTimestamp = moment("2012.08.10", "YYYY.MM.DD").unix();
-
-//console.log({ unixTimestamp });
-
 onMounted(() => {
     RideService.getRides().then((data) => {
         rides.value = data;
@@ -89,7 +86,6 @@ const createBooking = (bookingForm) => {
     modalDisplay.value = false;
     RideService.getRides().then((data) => {
         rides.value = data;
-        form = data;
     });
     toast.add({
         severity: "info",
@@ -118,6 +114,21 @@ function onCellEditComplete(event) {
 
     RideService.updateRide(form);
 }
+
+const onBookingFilterByDate = (date) => {
+    RideService.getRideByDate(date).then((data) => {
+        rides.value = data;
+
+        if (data.length <= 0) {
+            toast.add({
+                severity: "info",
+                summary: "Info",
+                detail: "no records have been found with the date provided.",
+                life: 3000,
+            });
+        }
+    });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -154,6 +165,7 @@ function onCellEditComplete(event) {
                     v-model="searchdate"
                     showIcon
                     showButtonBar
+                    @date-select="onBookingFilterByDate"
                     dateFormat="dd/mm/yy"
                     class="float-right mr-2"
                 />
@@ -170,7 +182,7 @@ function onCellEditComplete(event) {
             @cell-edit-complete="onCellEditComplete"
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
-            :globalFilterFields="['client_name', 'driver']"
+            :globalFilterFields="['request_id', 'client_name', 'driver']"
             scrollable
             scrollHeight="400px"
             resizableColumns
@@ -229,6 +241,7 @@ function onCellEditComplete(event) {
                     <template
                         v-if="
                             field === 'driver_id' ||
+                            field === 'pax' ||
                             field === 'service' ||
                             field === 'date' ||
                             field === 'time'
@@ -242,6 +255,13 @@ function onCellEditComplete(event) {
                             optionValue="id"
                             placeholder="Assing driver"
                             class="w-full md:w-14rem"
+                        />
+                        <InputMask
+                            v-if="field === 'pax'"
+                            v-model="data[field]"
+                            mask="9.9"
+                            placeholder="00.00"
+                            class="w-full"
                         />
                         <Dropdown
                             v-if="field === 'service'"
