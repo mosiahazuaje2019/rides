@@ -28,7 +28,7 @@ class BookingController extends Controller
         return response()->json(
             new BookingCollection(
                 $this->booking
-                        ->where('date', Carbon::now()->format('Y-m-d'))
+                        // ->where('date', Carbon::now()->format('Y-m-d'))
                         ->orderBy('time','asc')->get()
             )
         );
@@ -77,6 +77,36 @@ class BookingController extends Controller
     {
         $booking->delete();
         return response()->json(null,204);
+    }
+
+    public function filterByDate(BookingStoreRequest $request): JsonResponse
+    {
+        $date = $request->input('date');
+        
+        return response()->json(
+            new BookingCollection(
+                $this->booking
+                        ->where('date', Carbon::parse($date)->format('Y-m-d'))
+                        ->orderBy('time','asc')->get()
+            )
+        );
+    }
+
+    public function filterContains(BookingStoreRequest $request): JsonResponse
+    {
+        $contains = $request->input('contains');
+        
+        return response()->json(
+            new BookingCollection(
+                $this->booking
+                ->where(function ($query) use ($contains) {
+                    $query->where('client_name', 'like', "%{$contains}%")
+                          ->orWhere('request_id', 'like', "%{$contains}%");
+                })
+                ->orderBy('time', 'asc')
+                ->get()
+            )
+        );
     }
 
     public function cabosrwh(BookingStoreRequest $request):JsonResponse

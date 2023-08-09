@@ -5,12 +5,12 @@ import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
 import Calendar from "primevue/calendar";
 import Column from "primevue/column";
-import { FilterMatchMode, FilterOperator } from "primevue/api";
 import { ref, onMounted } from "vue";
 import { RideService } from "@/Services/RideService";
 import { DriverService } from "@/Services/DriverService";
 import BookingCreateForm from "./BookingCreateForm.vue";
 import { useToast } from "primevue/usetoast";
+import moment from "moment";
 
 const toast = useToast();
 
@@ -49,13 +49,7 @@ let drivers = ref([]);
 let rides = ref([]);
 let searchdate = ref();
 let modalDisplay = ref(false);
-
-const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    request_id: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    client_name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    driver: { value: null, matchMode: FilterMatchMode.CONTAINS },
-});
+let contains = ref();
 
 let form = {
     id: null,
@@ -98,18 +92,16 @@ const createBooking = (bookingForm) => {
 function onCellEditComplete(event) {
     let { data, newValue, field } = event;
 
-    if (field === "driver") {
-        const driver_id = newValue;
-
-        data[field] = drivers.value.filter(
-            (driver) => driver.id === driver_id
-        )[0].full_name;
-    } else {
-        data[field] = newValue;
-    }
+    data[field] = newValue;
 
     Object.keys(form).forEach(function (key) {
-        form[key] = data[key];
+        if (key === "date") {
+            form[key] = moment(data[key], "DD/MM/YYYY").format(
+                "ddd MMM DD YYYY HH:mm:ss [GMT]"
+            );
+        } else {
+            form[key] = data[key];
+        }
     });
 
     RideService.updateRide(form);
@@ -127,6 +119,12 @@ const onBookingFilterByDate = (date) => {
                 life: 3000,
             });
         }
+    });
+};
+
+const bookingFilter = () => {
+    RideService.filter(contains.value).then((data) => {
+        rides.value = data;
     });
 };
 </script>
@@ -155,9 +153,23 @@ const onBookingFilterByDate = (date) => {
     <div class="card px-4 rounded-md">
         <div class="flex justify-end mb-2 mt-2">
             <span class="p-input-icon-left w-full">
+                <InputText
+                    v-model="contains"
+                    type="text"
+                    placeholder="filter by ID or Client"
+                    v-on:keyup.enter="bookingFilter"
+                />
+                <Button
+                    label="Filter"
+                    aria-label="Filter"
+                    class="ml-2"
+                    :onclick="bookingFilter"
+                />
+            </span>
+            <span class="p-input-icon-left w-full">
                 <Button
                     icon="pi pi-plus"
-                    aria-label="Nuevo"
+                    aria-label="New"
                     class="float-right"
                     :onclick="() => (modalDisplay = true)"
                 />
@@ -182,25 +194,9 @@ const onBookingFilterByDate = (date) => {
             @cell-edit-complete="onCellEditComplete"
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
-            :globalFilterFields="['request_id', 'client_name', 'driver']"
             scrollable
             scrollHeight="400px"
-            resizableColumns
-            columnResizeMode="fit"
         >
-            <template #header>
-                <div class="flex justify-content-center mt-2">
-                    <span class="p-input-icon-left w-full">
-                        <i class="pi pi-search" />
-                        <InputText
-                            v-model="filters['global'].value"
-                            placeholder="Buscar"
-                            class="w-full"
-                        />
-                    </span>
-                </div>
-            </template>
-
             <Column
                 v-for="col of columns"
                 :key="col.field"

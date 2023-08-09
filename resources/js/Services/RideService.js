@@ -20,17 +20,32 @@ class RideService {
     }
 
     static async getRideByDate(date) {
-        const urlDateFormat = `${date.getDate()}-${
+        const urlDateFormat = `${date.getFullYear()}-${
             date.getMonth() + 1
-        }-${date.getFullYear()}`;
+        }-${date.getDate()}`;
 
-        // return axios
-        //     .get(`/api/v1/bookings/${urlDateFormat}`)
-        //     .then((response) => response.data)
-        //     .catch((error) => {
-        //         console.error("Error al obtener los rides por fecha:", error);
-        //         return [];
-        //     });
+        return axios
+            .get(`/api/v1/filterByDate?date=${urlDateFormat}`)
+            .then((response) => response.data)
+            .catch((error) => {
+                console.error("Error al obtener los rides por fecha:", error);
+                return [];
+            });
+
+        return [];
+    }
+
+    static async filter(strContains) {
+        return axios
+            .get(`/api/v1/filterContains?contains=${strContains}`)
+            .then((response) => response.data)
+            .catch((error) => {
+                console.error(
+                    "Error al obtener el filter de los rides:",
+                    error
+                );
+                return [];
+            });
 
         return [];
     }

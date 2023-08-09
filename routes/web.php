@@ -46,7 +46,14 @@ Route::group(['prefix' => 'api/v1'], function () {
     //User custom routes GET
     Route::get('get_drivers', [UserController::class,'get_drivers']);
 
+    
+    // Route::get('filterByDate', [BookingController::class,'filterByDate']);
+    Route::get('filterByDate', [BookingController::class, 'filterByDate']);
+    Route::get('filterContains', [BookingController::class, 'filterContains']);
+
+
     //Booking custom routes POST
     Route::post('cabosrwh', [BookingController::class,'cabosrwh']);
+
 
 });
