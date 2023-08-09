@@ -68,10 +68,6 @@ let form = {
 };
 
 onMounted(() => {
-    RideService.getRides().then((data) => {
-        rides.value = data;
-    });
-
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
