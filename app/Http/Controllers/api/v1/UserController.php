@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
-use App\Http\Requests\User\StoreResquest;
+use App\Http\Requests\User\UserStoreRequest;
 use App\Http\Requests\User\UserUpdateResquest;
+use Illuminate\Support\Facades\Hash;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -37,7 +38,11 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $request): JsonResponse
     {
-        $user = $this->user->create($request->all());
+        $userData = $request->all();
+
+        $userData['password'] = Hash::make($userData['password']);
+
+        $user = $this->user->create($userData);
         return response()->json(new UserResource($user),201);
     }
 

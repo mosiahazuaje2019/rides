@@ -12,9 +12,15 @@ defineProps({
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 Users
+                <span class="float-right px-4 mt-0">
+                    <PrimeButton @click="createUser()" icon="pi pi-plus" title="Crear Usuario" />
+                </span>
             </h2>
         </template>
 
+        <div>
+
+        </div>
         <div class="px-4 mt-2">
             <DataTable
                 :value="users"
@@ -88,6 +94,10 @@ export default {
                 this.users = res.data;
             });
         },
+        createUser(){
+            this.userId = null;
+            this.display = true;
+       },
         editUser(userId) {
             this.userId = userId;
             this.display = true;
