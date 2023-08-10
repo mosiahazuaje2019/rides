@@ -81,6 +81,22 @@
                 >
             </div>
         </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="relative mb-6" data-te-input-wrapper-init>
+                <label for="password"> Ingrese su contraseña </label>
+                <Password
+                    v-model="form.password"
+                    placeholder="Password"
+                    class="w-full"
+                />
+                <span
+                    v-if="error_password"
+                    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
+                    >{{ error_password }}
+                </span>
+            </div>
+        </div>
         <Button icon="pi pi-check" label="Guardar" @click="submit" />
     </div>
 </template>
@@ -98,6 +114,7 @@ export default {
                 phone: null,
                 profile: null,
                 email: null,
+                password: null,
             },
             profiles: [
                 { id: "Admin", name: "Admin" },
@@ -108,6 +125,7 @@ export default {
             error_phone: null,
             error_profile: null,
             error_email: null,
+            error_password: null
         };
     },
     props: {

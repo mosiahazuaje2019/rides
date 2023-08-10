@@ -146,7 +146,7 @@ const bookingFilter = () => {
         />
     </Dialog>
 
-    <div class="card px-4 rounded-md">
+    <div class="card px-4">
         <div class="flex justify-end mb-2 mt-2">
             <span class="p-input-icon-left w-full">
                 <InputText

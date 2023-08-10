@@ -21,7 +21,7 @@ use App\Http\Controllers\api\v1\BookingController;
 Route::get('/', function () {
     return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
+        //'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
@@ -47,11 +47,11 @@ Route::group(['prefix' => 'api/v1'], function () {
     //User custom routes GET
     Route::get('get_drivers', [UserController::class,'get_drivers']);
 
-    
+
     // Route::get('filterByDate', [BookingController::class,'filterByDate']);
     Route::get('filterByDate', [BookingController::class, 'filterByDate']);
     Route::get('filterContains', [BookingController::class, 'filterContains']);
-    
+
     //Booking custom routes POST
     Route::post('cabosrwh', [BookingController::class,'cabosrwh']);
 
