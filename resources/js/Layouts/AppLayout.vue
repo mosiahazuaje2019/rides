@@ -35,8 +35,6 @@ const logout = () => {
     <div>
         <Head :title="title" />
 
-
-
         <div class="min-h-screen bg-gradient-to-r from-cyan-500 to-blue-500">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
@@ -54,7 +52,7 @@ const logout = () => {
                             <div
                                 class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex"
                             >
-<!--                                 <NavLink
+                                <!--                                 <NavLink
                                     :href="route('dashboard')"
                                     :active="route().current('dashboard')"
                                 >
@@ -67,6 +65,10 @@ const logout = () => {
                                     Booking
                                 </NavLink>
                                 <NavLink
+                                    v-if="
+                                        $page.props.auth.user.profile ===
+                                        'Admin'
+                                    "
                                     :href="route('user')"
                                     :active="route().current('user')"
                                 >

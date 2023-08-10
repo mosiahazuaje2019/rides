@@ -9,6 +9,7 @@ use App\Http\Resources\BookingCollection;
 use App\Http\Requests\Booking\BookingStoreRequest;
 use App\Http\Requests\Booking\BookingUpdateRequest;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 use Illuminate\Http\JsonResponse;
 
@@ -28,7 +29,7 @@ class BookingController extends Controller
         return response()->json(
             new BookingCollection(
                 $this->booking
-                        ->where('date', Carbon::now()->format('Y-m-d'))
+                        // ->where('date', Carbon::now()->format('Y-m-d'))
                         ->orderBy('time','asc')->get()
             )
         );
@@ -79,13 +80,78 @@ class BookingController extends Controller
         return response()->json(null,204);
     }
 
-    public function cabosrwh(BookingStoreRequest $request):JsonResponse
+    public function filterByDate(BookingStoreRequest $request): JsonResponse
     {
-        $bookingData = $request->all();
-        $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
-        $bookingData['time'] = Carbon::parse($request->time)->format('H:i:s');
+        $date = $request->input('date');
+        
+        return response()->json(
+            new BookingCollection(
+                $this->booking
+                        ->where('date', Carbon::parse($date)->format('Y-m-d'))
+                        ->orderBy('time','asc')->get()
+            )
+        );
+    }
 
-        $booking = $this->booking->create($bookingData);
-        return response()->json(new BookingResource($booking), 201);
+    public function filterContains(BookingStoreRequest $request): JsonResponse
+    {
+        $contains = $request->input('contains');
+        
+        return response()->json(
+            new BookingCollection(
+                $this->booking
+                ->where(function ($query) use ($contains) {
+                    $query->where('client_name', 'like', "%{$contains}%")
+                          ->orWhere('request_id', 'like', "%{$contains}%");
+                })
+                ->orderBy('time', 'asc')
+                ->get()
+            )
+        );
+    }
+
+    public function cabosrwh(Request $request):JsonResponse
+    {
+        $requestId = $request->input('post')['ID'];
+        $pax = $request->input('meta')['passenger_adult_number'] . "." . $request->input('meta')['passenger_children_number'];
+        
+        $serviceType = $request->input('transfer_type_name');
+        $clientName = $request->input('meta')['client_contact_detail_first_name'] . " " . $request->input('meta')['client_contact_detail_last_name'];
+        $hotel = $request->input('meta')['coordinate'][1]['address'];
+
+        
+        $arrival_flight = $request->input('meta')['form_element_field'][0]['value'] . "#" . $request->input('meta')['form_element_field'][1]['value'];
+        $pickup_date = $request->input('meta')['pickup_date'];
+        $pickup_time = $request->input('meta')['pickup_time'];
+
+        $booking = new Booking;
+        $booking->request_id = $requestId;
+        $booking->pax = $pax;
+        $booking->service = "LLegada";
+        $booking->client_name = $clientName;
+        $booking->hotel = $hotel;
+        $booking->flight = $arrival_flight;
+        $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
+        $booking->time = $pickup_time;
+        $booking->save();
+
+        if ($serviceType === "Round Trip") {
+            $departure_flight = $request->input('meta')['form_element_field'][2]['value'] . "#" . $request->input('meta')['form_element_field'][3]['value'];
+            $return_date = $request->input('meta')['return_date'];
+            $return_time = $request->input('meta')['return_time'];
+
+            $booking = new Booking;
+            $booking->request_id = $requestId;
+            $booking->pax = $pax;
+            $booking->service = "Salida";
+            $booking->client_name = $clientName;
+            $booking->hotel = $hotel;
+            $booking->flight = $departure_flight;
+            $booking->date = Carbon::parse($return_date)->format('Y-m-d');
+            $booking->time = $return_time;
+            $booking->save();
+        }
+
+        return response()->json();
     }
 }

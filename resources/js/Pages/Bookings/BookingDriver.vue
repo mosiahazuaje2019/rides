@@ -1,400 +1,120 @@
 <script setup>
-import "primeflex/primeflex.css";
+import DataTable from "primevue/datatable";
+import InputText from "primevue/inputtext";
+import Dropdown from "primevue/dropdown";
+import Column from "primevue/column";
 import { ref, onMounted } from "vue";
-import DataView from "primevue/dataview";
+import { RideService } from "@/Services/RideService";
+import { DriverService } from "@/Services/DriverService";
+import { useToast } from "primevue/usetoast";
+const toast = useToast();
 
 const components = {
-    DataView,
+    DataTable,
+    Column,
+    InputText,
+    Dropdown,
 };
 
-// import { RideService } from "@/service/RideService";
-
-// onMounted(() => {
-//     RideService.getRides().then(
-//         (data) => (rides.value = data.slice(0, 5))
-//     );
-// });
-
-// const products = ref();
-const getSeverity = (product) => {
-    switch (product.inventoryStatus) {
-        case "INSTOCK":
-            return "success";
-
-        case "LOWSTOCK":
-            return "warning";
-
-        case "OUTOFSTOCK":
-            return "danger";
-
-        default:
-            return null;
-    }
-};
-
-let rides = [
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
-    {
-        request_id: "15285",
-        driver: "Elieser Reyes",
-        pax: "2:2",
-        service: "LLegada",
-        client_name: "Alex Garcia",
-        hotel: "Cabo Azul Resort, Paseo Malecon LT 11, Zona Hotelera, San José del Cabo, Baja California Sur, México",
-        flight: "AA#123",
-        date: "July 28, 2023",
-        time: "15:20",
-        agency: "Travel Agency",
-        status: "#100",
-        extras: "2 car seats/ compras",
-    },
+const columns = [
+    { field: "request_id", header: "ID" },
+    { field: "driver_id", header: "Driver" },
+    { field: "pax", header: "Pax" },
+    { field: "service", header: "Service" },
+    { field: "client_name", header: "Client" },
+    { field: "hotel", header: "Hotel" },
+    { field: "flight", header: "Flight" },
+    { field: "date", header: "Date" },
+    { field: "time", header: "Time" },
+    { field: "agency", header: "Agency" },
+    { field: "status", header: "Status" },
+    { field: "extras", header: "Extras" },
 ];
+
+const services = [
+    { service_name: "LLegada" },
+    { service_name: "Salida" },
+    { service_name: "Traslado" },
+];
+
+let drivers = ref([]);
+let rides = ref([]);
+let searchdate = ref();
+
+onMounted(() => {
+    DriverService.getDrivers().then((data) => (drivers.value = data));
+});
+
+const onBookingFilterByDate = (date) => {
+    RideService.getRideByDate(date).then((data) => {
+        rides.value = data;
+
+        if (data.length <= 0) {
+            toast.add({
+                severity: "info",
+                summary: "Info",
+                detail: "no records have been found with the date provided.",
+                life: 3000,
+            });
+        }
+    });
+};
 </script>
 
+<style lang="scss" scoped>
+::v-deep(.editable-cells-table td.p-cell-editing) {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+</style>
+
 <template>
-    <DataView :value="rides">
-        <template #list="slotProps">
-            <div class="col-12">
-                <div
-                    class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4"
+    <div class="card px-4 rounded-md">
+        <div class="flex justify-end mb-2 mt-2">
+            <span class="p-input-icon-left w-full">
+                <Calendar
+                    v-model="searchdate"
+                    showIcon
+                    showButtonBar
+                    @date-select="onBookingFilterByDate"
+                    dateFormat="dd/mm/yy"
+                    class="float-right mr-2"
+                />
+            </span>
+        </div>
+
+        <DataTable
+            v-model:filters="filters"
+            paginator
+            :rows="5"
+            :rowsPerPageOptions="[5, 10, 20, 50]"
+            :value="rides"
+            tableStyle="max-width: 150rem"
+            scrollable
+            scrollHeight="400px"
+        >
+            <Column
+                v-for="col of columns"
+                :key="col.field"
+                :field="col.field"
+                :header="col.header"
+            >
+                <template
+                    v-if="col.field === 'driver_id'"
+                    #body="{ data, field }"
                 >
-                    <div
-                        class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4"
-                    >
-                        <div class="flex flex-column align-items-start gap-3">
-                            <div class="text-xl text-900">
-                                ID: {{ slotProps.data.request_id }}
-                            </div>
-                            <div class="flex align-items-center gap-3">
-                                <span class="flex align-items-center gap-2">
-                                    <!-- <i class="pi pi-car text-yellow-400"></i> -->
-                                    <font-awesome-icon
-                                        icon="taxi"
-                                        class="text-yellow-400"
-                                    />
-                                    <span class="font-semibold">{{
-                                        slotProps.data.driver
-                                    }}</span>
-                                </span>
-                            </div>
-                            <div class="text-xl text-900">
-                                <font-awesome-icon
-                                    icon="users"
-                                    class="text-blue-600"
-                                />
-                                {{ slotProps.data.pax }}
-                            </div>
-                            <div class="text-xl text-900">
-                                <!-- <font-awesome-icon icon="plane" /> -->
-                                {{ slotProps.data.service }}
-                            </div>
-                            <div class="text-xl font-bold text-900">
-                                <font-awesome-icon
-                                    icon="user-tie"
-                                    class="text-blue-600"
-                                />
-                                {{ slotProps.data.client_name }}
-                            </div>
-                            <div
-                                class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2"
-                            >
-                                <span class="text-xl font-semibold">{{
-                                    slotProps.data.hotel
-                                }}</span>
-                            </div>
-                            <div class="text-xl text-900">
-                                <font-awesome-icon icon="plane" />
-                                {{ slotProps.data.flight }}
-                            </div>
-                            <div class="text-xl text-900">
-                                <!-- <font-awesome-icon icon="plane" /> -->
-                                {{ slotProps.data.date }}
-                            </div>
-                            <div class="text-xl text-900">
-                                <!-- <font-awesome-icon icon="plane" /> -->
-                                {{ slotProps.data.time }}
-                            </div>
-                            <div class="text-xl text-900">
-                                <!-- <font-awesome-icon icon="plane" /> -->
-                                {{ slotProps.data.agency }}
-                            </div>
-                            <div class="text-xl text-900">
-                                <!-- <font-awesome-icon icon="plane" /> -->
-                                {{ slotProps.data.status }}
-                            </div>
-                            <div class="text-xl text-900">
-                                <!-- <font-awesome-icon icon="plane" /> -->
-                                {{ slotProps.data.extras }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </DataView>
+                    <Dropdown
+                        v-if="field === 'driver_id'"
+                        v-model="data[field]"
+                        :options="drivers"
+                        optionLabel="full_name"
+                        optionValue="id"
+                        placeholder="Assing driver"
+                        class="w-full md:w-14rem"
+                        disabled
+                    />
+                </template>
+            </Column>
+        </DataTable>
+    </div>
 </template>

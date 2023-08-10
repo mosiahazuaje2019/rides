@@ -5,12 +5,12 @@ import InputNumber from "primevue/inputnumber";
 import Dropdown from "primevue/dropdown";
 import Calendar from "primevue/calendar";
 import Column from "primevue/column";
-import { FilterMatchMode, FilterOperator } from "primevue/api";
 import { ref, onMounted } from "vue";
 import { RideService } from "@/Services/RideService";
 import { DriverService } from "@/Services/DriverService";
 import BookingCreateForm from "./BookingCreateForm.vue";
 import { useToast } from "primevue/usetoast";
+import moment from "moment";
 
 const toast = useToast();
 
@@ -49,12 +49,7 @@ let drivers = ref([]);
 let rides = ref([]);
 let searchdate = ref();
 let modalDisplay = ref(false);
-
-const filters = ref({
-    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    client_name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-    driver: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
-});
+let contains = ref();
 
 let form = {
     id: null,
@@ -72,15 +67,7 @@ let form = {
     extras: null,
 };
 
-//const unixTimestamp = moment("2012.08.10", "YYYY.MM.DD").unix();
-
-//console.log({ unixTimestamp });
-
 onMounted(() => {
-    RideService.getRides().then((data) => {
-        rides.value = data;
-    });
-
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
@@ -89,7 +76,6 @@ const createBooking = (bookingForm) => {
     modalDisplay.value = false;
     RideService.getRides().then((data) => {
         rides.value = data;
-        form = data;
     });
     toast.add({
         severity: "info",
@@ -102,22 +88,41 @@ const createBooking = (bookingForm) => {
 function onCellEditComplete(event) {
     let { data, newValue, field } = event;
 
-    if (field === "driver") {
-        const driver_id = newValue;
-
-        data[field] = drivers.value.filter(
-            (driver) => driver.id === driver_id
-        )[0].full_name;
-    } else {
-        data[field] = newValue;
-    }
+    data[field] = newValue;
 
     Object.keys(form).forEach(function (key) {
-        form[key] = data[key];
+        if (key === "date") {
+            form[key] = moment(data[key], "DD/MM/YYYY").format(
+                "ddd MMM DD YYYY HH:mm:ss [GMT]"
+            );
+        } else {
+            form[key] = data[key];
+        }
     });
 
     RideService.updateRide(form);
 }
+
+const onBookingFilterByDate = (date) => {
+    RideService.getRideByDate(date).then((data) => {
+        rides.value = data;
+
+        if (data.length <= 0) {
+            toast.add({
+                severity: "info",
+                summary: "Info",
+                detail: "no records have been found with the date provided.",
+                life: 3000,
+            });
+        }
+    });
+};
+
+const bookingFilter = () => {
+    RideService.filter(contains.value).then((data) => {
+        rides.value = data;
+    });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -144,9 +149,23 @@ function onCellEditComplete(event) {
     <div class="card px-4 rounded-md">
         <div class="flex justify-end mb-2 mt-2">
             <span class="p-input-icon-left w-full">
+                <InputText
+                    v-model="contains"
+                    type="text"
+                    placeholder="filter by ID or Client"
+                    v-on:keyup.enter="bookingFilter"
+                />
+                <Button
+                    label="Filter"
+                    aria-label="Filter"
+                    class="ml-2"
+                    :onclick="bookingFilter"
+                />
+            </span>
+            <span class="p-input-icon-left w-full">
                 <Button
                     icon="pi pi-plus"
-                    aria-label="Nuevo"
+                    aria-label="New"
                     class="float-right"
                     :onclick="() => (modalDisplay = true)"
                 />
@@ -154,6 +173,7 @@ function onCellEditComplete(event) {
                     v-model="searchdate"
                     showIcon
                     showButtonBar
+                    @date-select="onBookingFilterByDate"
                     dateFormat="dd/mm/yy"
                     class="float-right mr-2"
                 />
@@ -170,23 +190,9 @@ function onCellEditComplete(event) {
             @cell-edit-complete="onCellEditComplete"
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
-            :globalFilterFields="['client_name', 'driver']"
-            scrollable scrollHeight="400px"
-            resizableColumns columnResizeMode="fit"
+            scrollable
+            scrollHeight="400px"
         >
-            <template #header>
-                <div class="flex justify-content-center mt-2">
-                    <span class="p-input-icon-left w-full">
-                        <i class="pi pi-search" />
-                        <InputText
-                            v-model="filters['global'].value"
-                            placeholder="Buscar"
-                            class="w-full"
-                        />
-                    </span>
-                </div>
-            </template>
-
             <Column
                 v-for="col of columns"
                 :key="col.field"
@@ -227,6 +233,7 @@ function onCellEditComplete(event) {
                     <template
                         v-if="
                             field === 'driver_id' ||
+                            field === 'pax' ||
                             field === 'service' ||
                             field === 'date' ||
                             field === 'time'
@@ -240,6 +247,13 @@ function onCellEditComplete(event) {
                             optionValue="id"
                             placeholder="Assing driver"
                             class="w-full md:w-14rem"
+                        />
+                        <InputMask
+                            v-if="field === 'pax'"
+                            v-model="data[field]"
+                            mask="9.9"
+                            placeholder="00.00"
+                            class="w-full"
                         />
                         <Dropdown
                             v-if="field === 'service'"
