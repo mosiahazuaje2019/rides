@@ -101,8 +101,6 @@ function onCellEditComplete(event) {
             form[key] = moment(data[key], "DD/MM/YYYY").format(
                 "ddd MMM DD YYYY HH:mm:ss [GMT]"
             );
-        } else if (key === "time") {
-            form[key] = formatTime(data["time"]);
         } else {
             form[key] = data[key];
         }
