@@ -71,7 +71,13 @@ onMounted(() => {
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
+const formatTime = (time) => {
+    return moment(time, "DD/MM/YYYY h:mm:ss A").format("HH:mm:ss");
+};
+
 const createBooking = (bookingForm) => {
+    bookingForm["time"] = formatTime(bookingForm["time"]);
+
     RideService.createRide(bookingForm);
     modalDisplay.value = false;
     RideService.getRides().then((data) => {
@@ -95,6 +101,8 @@ function onCellEditComplete(event) {
             form[key] = moment(data[key], "DD/MM/YYYY").format(
                 "ddd MMM DD YYYY HH:mm:ss [GMT]"
             );
+        } else if (key === "time") {
+            form[key] = formatTime(data["time"]);
         } else {
             form[key] = data[key];
         }
