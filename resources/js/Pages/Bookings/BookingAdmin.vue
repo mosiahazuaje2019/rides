@@ -10,7 +10,8 @@ import { RideService } from "@/Services/RideService";
 import { DriverService } from "@/Services/DriverService";
 import BookingCreateForm from "./BookingCreateForm.vue";
 import { useToast } from "primevue/usetoast";
-import moment from "moment";
+import moment from "moment-timezone";
+
 
 const toast = useToast();
 
@@ -72,7 +73,7 @@ onMounted(() => {
 });
 
 const formatTime = (time) => {
-    return moment(time, "DD/MM/YYYY h:mm:ss A").format("HH:mm:ss");
+    return moment(time, "DD/MM/YYYY h:mm:ss A").tz("America/Mexico_City").format("HH:mm:ss");
 };
 
 const createBooking = (bookingForm) => {
@@ -101,7 +102,11 @@ function onCellEditComplete(event) {
             form[key] = moment(data[key], "DD/MM/YYYY").format(
                 "ddd MMM DD YYYY HH:mm:ss [GMT]"
             );
-        } else {
+        }
+        else if (key === "time"){
+            form[key] = formatTime(data[key])
+        }
+        else {
             form[key] = data[key];
         }
     });
@@ -228,6 +233,7 @@ const bookingFilter = () => {
                     <Calendar
                         v-if="field === 'time'"
                         v-model="data[field]"
+                        hourFormat="24"
                         timeOnly
                     />
                 </template>
@@ -277,6 +283,7 @@ const bookingFilter = () => {
                         <Calendar
                             v-if="field === 'time'"
                             v-model="data[field]"
+                            hourFormat="24"
                             timeOnly
                         />
                     </template>
