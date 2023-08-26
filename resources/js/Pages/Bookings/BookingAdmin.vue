@@ -71,7 +71,13 @@ onMounted(() => {
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
+const formatTime = (time) => {
+    return moment(time, "DD/MM/YYYY h:mm:ss A").format("HH:mm:ss");
+};
+
 const createBooking = (bookingForm) => {
+    bookingForm["time"] = formatTime(bookingForm["time"]);
+
     RideService.createRide(bookingForm);
     modalDisplay.value = false;
     RideService.getRides().then((data) => {
@@ -182,9 +188,6 @@ const bookingFilter = () => {
 
         <DataTable
             v-model:filters="filters"
-            paginator
-            :rows="5"
-            :rowsPerPageOptions="[5, 10, 20, 50]"
             :value="rides"
             editMode="cell"
             @cell-edit-complete="onCellEditComplete"

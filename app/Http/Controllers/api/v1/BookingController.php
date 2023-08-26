@@ -132,7 +132,7 @@ class BookingController extends Controller
         $booking->hotel = $hotel;
         $booking->flight = $arrival_flight;
         $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
-        $booking->time = $pickup_time;
+        $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
         $booking->save();
 
         if ($serviceType === "Round Trip") {
@@ -148,7 +148,7 @@ class BookingController extends Controller
             $booking->hotel = $hotel;
             $booking->flight = $departure_flight;
             $booking->date = Carbon::parse($return_date)->format('Y-m-d');
-            $booking->time = $return_time;
+            $booking->time = Carbon::parse($return_time)->format('H:i:s');
             $booking->save();
         }
 
