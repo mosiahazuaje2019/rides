@@ -83,7 +83,7 @@ class BookingController extends Controller
     public function filterByDate(BookingStoreRequest $request): JsonResponse
     {
         $date = $request->input('date');
-        
+
         return response()->json(
             new BookingCollection(
                 $this->booking
@@ -96,7 +96,7 @@ class BookingController extends Controller
     public function filterContains(BookingStoreRequest $request): JsonResponse
     {
         $contains = $request->input('contains');
-        
+
         return response()->json(
             new BookingCollection(
                 $this->booking
@@ -114,12 +114,12 @@ class BookingController extends Controller
     {
         $requestId = $request->input('post')['ID'];
         $pax = $request->input('meta')['passenger_adult_number'] . "." . $request->input('meta')['passenger_children_number'];
-        
+
         $serviceType = $request->input('transfer_type_name');
         $clientName = $request->input('meta')['client_contact_detail_first_name'] . " " . $request->input('meta')['client_contact_detail_last_name'];
         $hotel = $request->input('meta')['coordinate'][1]['address'];
 
-        
+
         $arrival_flight = $request->input('meta')['form_element_field'][0]['value'] . "#" . $request->input('meta')['form_element_field'][1]['value'];
         $pickup_date = $request->input('meta')['pickup_date'];
         $pickup_time = $request->input('meta')['pickup_time'];
