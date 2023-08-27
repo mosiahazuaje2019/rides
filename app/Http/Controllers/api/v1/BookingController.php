@@ -117,33 +117,70 @@ class BookingController extends Controller
 
         $serviceType = $request->input('transfer_type_name');
         $clientName = $request->input('meta')['client_contact_detail_first_name'] . " " . $request->input('meta')['client_contact_detail_last_name'];
-        $hotel = $request->input('meta')['coordinate'][1]['address'];
-
+        // $hotel = $request->input('meta')['coordinate'][1]['address'];
 
         $arrival_flight = $request->input('meta')['form_element_field'][0]['value'] . "#" . $request->input('meta')['form_element_field'][1]['value'];
+        $departure_flight = $request->input('meta')['form_element_field'][2]['value'] . "#" . $request->input('meta')['form_element_field'][3]['value'];
+
         $pickup_date = $request->input('meta')['pickup_date'];
         $pickup_time = $request->input('meta')['pickup_time'];
+        $extras = $request->input('meta')['comment'];
 
-        $booking = new Booking;
-        $booking->request_id = $requestId;
-        $booking->pax = $pax;
-        $booking->service = "LLegada";
-        $booking->client_name = $clientName;
-        $booking->hotel = $hotel;
-        $booking->flight = $arrival_flight;
-        $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
-        $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
-        $booking->save();
+        if ($serviceType === "One Way") {
+            if (strpos(strtolower($request->input('meta')['coordinate'][0]['address']), 'aeropuerto') == true) {
+                $service = "LLegada";
+                $hotel = $request->input('meta')['coordinate'][1]['address'];
 
-        if ($serviceType === "Round Trip") {
-            $departure_flight = $request->input('meta')['form_element_field'][2]['value'] . "#" . $request->input('meta')['form_element_field'][3]['value'];
+                $booking = new Booking;
+                $booking->request_id = $requestId;
+                $booking->pax = $pax;
+                $booking->service = $service;
+                $booking->client_name = $clientName;
+                $booking->hotel = $hotel;
+                $booking->flight = $arrival_flight;
+                $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
+                $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
+                $booking->extras = $extras;
+                $booking->save();
+            } else {
+                $service = "Salida";
+                $hotel = $request->input('meta')['coordinate'][0]['address'];
+
+                $booking = new Booking;
+                $booking->request_id = $requestId;
+                $booking->pax = $pax;
+                $booking->service = $service;
+                $booking->client_name = $clientName;
+                $booking->hotel = $hotel;
+                $booking->flight = $departure_flight;
+                $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
+                $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
+                $booking->save();
+            }
+        } else if ($serviceType === "Round Trip") {
+            $service = "LLegada";
+            $hotel = $request->input('meta')['coordinate'][1]['address'];
+
+            $booking = new Booking;
+            $booking->request_id = $requestId;
+            $booking->pax = $pax;
+            $booking->service = $service;
+            $booking->client_name = $clientName;
+            $booking->hotel = $hotel;
+            $booking->flight = $arrival_flight;
+            $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
+            $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
+            $booking->save();
+
+
+            $service = "Salida";
             $return_date = $request->input('meta')['return_date'];
             $return_time = $request->input('meta')['return_time'];
 
             $booking = new Booking;
             $booking->request_id = $requestId;
             $booking->pax = $pax;
-            $booking->service = "Salida";
+            $booking->service = $service;
             $booking->client_name = $clientName;
             $booking->hotel = $hotel;
             $booking->flight = $departure_flight;

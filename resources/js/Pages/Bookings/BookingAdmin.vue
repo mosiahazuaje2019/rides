@@ -12,7 +12,6 @@ import BookingCreateForm from "./BookingCreateForm.vue";
 import { useToast } from "primevue/usetoast";
 import moment from "moment-timezone";
 
-
 const toast = useToast();
 
 const components = {
@@ -73,7 +72,9 @@ onMounted(() => {
 });
 
 const formatTime = (time) => {
-    return moment(time, "DD/MM/YYYY h:mm:ss A").tz("America/Mexico_City").format("HH:mm:ss");
+    return moment(time, "DD/MM/YYYY h:mm:ss A")
+        .tz("America/Mexico_City")
+        .format("HH:mm:ss");
 };
 
 const createBooking = (bookingForm) => {
@@ -87,7 +88,7 @@ const createBooking = (bookingForm) => {
     toast.add({
         severity: "info",
         summary: "Info",
-        detail: "Se guardo exitosamente",
+        detail: "Successfully saved",
         life: 3000,
     });
 };
@@ -102,11 +103,9 @@ function onCellEditComplete(event) {
             form[key] = moment(data[key], "DD/MM/YYYY").format(
                 "ddd MMM DD YYYY HH:mm:ss [GMT]"
             );
-        }
-        else if (key === "time"){
-            form[key] = formatTime(data[key])
-        }
-        else {
+        } else if (key === "time") {
+            form[key] = formatTime(data[key]);
+        } else {
             form[key] = data[key];
         }
     });
