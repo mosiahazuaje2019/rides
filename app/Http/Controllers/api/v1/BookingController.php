@@ -28,9 +28,7 @@ class BookingController extends Controller
     {
         return response()->json(
             new BookingCollection(
-                $this->booking
-                        // ->where('date', Carbon::now()->format('Y-m-d'))
-                        ->orderBy('time','asc')->get()
+                $this->booking->orderBy('time','asc')->get()
             )
         );
     }
@@ -42,7 +40,6 @@ class BookingController extends Controller
     {
         $bookingData = $request->all();
         $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
-        $bookingData['time'] = Carbon::parse($request->time)->format('H:i:s');
 
         $booking = $this->booking->create($bookingData);
         return response()->json(new BookingResource($booking), 201);
@@ -65,7 +62,6 @@ class BookingController extends Controller
     {
         $bookingData = $request->all();
         $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
-        $bookingData['time'] = Carbon::parse($request->time)->format('H:i:s');
 
         $booking->update($bookingData);
         return response()->json(new BookingResource($booking));

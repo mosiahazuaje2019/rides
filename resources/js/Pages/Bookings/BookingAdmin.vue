@@ -71,15 +71,7 @@ onMounted(() => {
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
-const formatTime = (time) => {
-    return moment(time, "DD/MM/YYYY h:mm:ss A")
-        //.tz("America/Bogota")
-        .format("HH:mm:ss");
-};
-
 const createBooking = (bookingForm) => {
-    bookingForm["time"] = formatTime(bookingForm["time"]);
-
     RideService.createRide(bookingForm);
     modalDisplay.value = false;
     RideService.getRides().then((data) => {
@@ -103,8 +95,6 @@ function onCellEditComplete(event) {
             form[key] = moment(data[key], "DD/MM/YYYY").format(
                 "ddd MMM DD YYYY HH:mm:ss [GMT]"
             );
-        } else if (key === "time") {
-            form[key] = formatTime(data[key]);
         } else {
             form[key] = data[key];
         }
@@ -229,11 +219,11 @@ const bookingFilter = () => {
                         v-model="data[field]"
                         dateFormat="dd/mm/yy"
                     />
-                    <Calendar
+                    <InputMask
                         v-if="field === 'time'"
                         v-model="data[field]"
-                        hourFormat="24"
-                        timeOnly
+                        mask="99:99"
+                        placeholder="23:00"
                     />
                 </template>
 
@@ -279,11 +269,11 @@ const bookingFilter = () => {
                             dateFormat="dd/mm/yy"
                             showButtonBar
                         />
-                        <Calendar
+                        <InputMask
                             v-if="field === 'time'"
                             v-model="data[field]"
-                            hourFormat="24"
-                            timeOnly
+                            mask="99:99"
+                            placeholder="23:00"
                         />
                     </template>
 
