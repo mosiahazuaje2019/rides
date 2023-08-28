@@ -73,7 +73,7 @@ onMounted(() => {
 
 const formatTime = (time) => {
     return moment(time, "DD/MM/YYYY h:mm:ss A")
-        //.tz("America/Bogota")
+        .tz("America/Mexico_City")
         .format("HH:mm:ss");
 };
 
