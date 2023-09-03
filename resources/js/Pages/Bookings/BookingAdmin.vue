@@ -51,6 +51,7 @@ let rides = ref([]);
 let searchdate = ref();
 let modalDisplay = ref(false);
 let contains = ref();
+let filters = ref();
 
 let form = {
     id: null,
@@ -69,7 +70,6 @@ let form = {
 };
 
 onMounted(() => {
-    console.log({ drivers });
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
@@ -217,7 +217,7 @@ const bookingFilter = () => {
                     <span>
                         {{
                             drivers.filter((driver) => {
-                                return (driver.id = data[field]);
+                                return (driver.id === data[field]);
                             })[0]?.full_name
                         }}
                     </span>
