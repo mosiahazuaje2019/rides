@@ -45,6 +45,7 @@ const services = [
     { service_name: "Traslado" },
 ];
 
+const editingRows = ref([]);
 let drivers = ref([]);
 let rides = ref([]);
 let searchdate = ref();
@@ -68,6 +69,7 @@ let form = {
 };
 
 onMounted(() => {
+    console.log({ drivers });
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
@@ -85,23 +87,33 @@ const createBooking = (bookingForm) => {
     });
 };
 
-function onCellEditComplete(event) {
-    let { data, newValue, field } = event;
+const onRowEditSave = (event) => {
+    let { newData } = event;
 
-    data[field] = newValue;
+    const rideDate = moment(newData.date).format("DD/MM/YY");
 
     Object.keys(form).forEach(function (key) {
         if (key === "date") {
-            form[key] = moment(data[key], "DD/MM/YYYY").format(
+            form[key] = moment(newData[key], "DD/MM/YYYY").format(
                 "ddd MMM DD YYYY HH:mm:ss [GMT]"
             );
         } else {
-            form[key] = data[key];
+            form[key] = newData[key];
         }
     });
 
+    console.log({ form });
+
     RideService.updateRide(form);
-}
+
+    newData.date = rideDate;
+
+    rides.value.map((ride, index) => {
+        if (ride.id === newData.id) {
+            rides.value[index] = newData;
+        }
+    });
+};
 
 const onBookingFilterByDate = (date) => {
     RideService.getRideByDate(date).then((data) => {
@@ -182,9 +194,11 @@ const bookingFilter = () => {
 
         <DataTable
             v-model:filters="filters"
+            v-model:editingRows="editingRows"
             :value="rides"
-            editMode="cell"
-            @cell-edit-complete="onCellEditComplete"
+            dataKey="id"
+            editMode="row"
+            @row-edit-save="onRowEditSave"
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
             scrollable
@@ -197,34 +211,16 @@ const bookingFilter = () => {
                 :header="col.header"
             >
                 <template
-                    v-if="
-                        col.field === 'driver_id' ||
-                        col.field === 'date' ||
-                        col.field === 'time'
-                    "
+                    v-if="col.field === 'driver_id'"
                     #body="{ data, field }"
                 >
-                    <Dropdown
-                        v-if="field === 'driver_id'"
-                        v-model="data[field]"
-                        :options="drivers"
-                        optionLabel="full_name"
-                        optionValue="id"
-                        placeholder="Assing driver"
-                        class="w-full md:w-14rem"
-                    />
-
-                    <Calendar
-                        v-if="field === 'date'"
-                        v-model="data[field]"
-                        dateFormat="dd/mm/yy"
-                    />
-                    <InputMask
-                        v-if="field === 'time'"
-                        v-model="data[field]"
-                        mask="99:99"
-                        placeholder="23:00"
-                    />
+                    <span>
+                        {{
+                            drivers.filter((driver) => {
+                                return (driver.id = data[field]);
+                            })[0]?.full_name
+                        }}
+                    </span>
                 </template>
 
                 <template #editor="{ data, field }">
@@ -285,6 +281,11 @@ const bookingFilter = () => {
                     />
                 </template>
             </Column>
+            <Column
+                :rowEditor="true"
+                style="width: 10%; min-width: 8rem"
+                bodyStyle="text-align:center"
+            ></Column>
         </DataTable>
     </div>
 </template>
