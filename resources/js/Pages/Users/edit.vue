@@ -160,10 +160,11 @@ export default {
                 }
             }
             try {
-                const res = await axios.put(
-                    `/api/v1/users/${this.$props.userId}`,
-                    this.form
-                );
+
+                //Validate if null password if is true delete from object
+                this.form.password === null ? delete this.form.password :  this.form
+
+                const res = await axios.put(`/api/v1/users/${this.$props.userId}`,this.form);
                 return this.emitter.emit("users_reload");
             } catch (e) {
                 if (e.response) {
