@@ -61,7 +61,9 @@ class BookingController extends Controller
     public function update(BookingUpdateRequest $request, Booking $booking): JsonResponse
     {
         $bookingData = $request->all();
-        $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
+        if($request->date) {
+            $bookingData['date'] = Carbon::parse($request->date)->format('Y-m-d');
+        }
 
         $booking->update($bookingData);
         return response()->json(new BookingResource($booking));
