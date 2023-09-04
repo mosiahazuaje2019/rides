@@ -53,21 +53,21 @@ let modalDisplay = ref(false);
 let contains = ref();
 let filters = ref();
 
-let form = {
-    id: null,
-    request_id: null,
-    driver_id: null,
-    pax: null,
-    service: null,
-    client_name: null,
-    hotel: null,
-    flight: null,
-    date: null,
-    time: null,
-    agency: null,
-    status: null,
-    extras: null,
-};
+// let form = {
+//     id: null,
+//     request_id: null,
+//     driver_id: null,
+//     pax: null,
+//     service: null,
+//     client_name: null,
+//     hotel: null,
+//     flight: null,
+//     date: null,
+//     time: null,
+//     agency: null,
+//     status: null,
+//     extras: null,
+// };
 
 onMounted(() => {
     DriverService.getDrivers().then((data) => (drivers.value = data));
@@ -88,28 +88,35 @@ const createBooking = (bookingForm) => {
 };
 
 const onRowEditSave = (event) => {
-    let { newData } = event;
+    // desestructurando data (anterior) y newData del event
+    let { data, newData } = event;
 
-    const rideDate = moment(newData.date).format("DD/MM/YY");
+    // iterando sobre las propiedades del newData para comparar y ver cuales se han modificado
+    const modifiedKeys = Object.keys(newData).filter(
+        (key) => data[key] !== newData[key]
+    );
 
-    Object.keys(form).forEach(function (key) {
-        if (key === "date") {
-            form[key] = moment(newData[key], "DD/MM/YYYY").format(
-                "ddd MMM DD YYYY HH:mm:ss [GMT]"
-            );
-        } else {
-            form[key] = newData[key];
-        }
-    });
+    // se crea un objecto form con el id que siempre va a requerir el backend
+    let form = { id: newData.id };
 
-    console.log({ form });
+    // se itera sobre las propiedades modificadas para asignarle los valores al form
+    modifiedKeys.map((key) => (form[key] = newData[key]));
 
+    // se envia al backend el form con los datos modificados y el id
     RideService.updateRide(form);
 
-    newData.date = rideDate;
+    // en caso que entre los datos modificados se encuentre el campo date
+    if (modifiedKeys.includes("date")) {
+        // se formatea a dia, mes y año para mostrar de vuelta en el datatable
+        // esto es debido a que el componente calendar de entrada de fecha lo muestra en formato largo
+        newData.date = moment(newData.date).format("DD/MM/YY");
+    }
 
+    // se itera sobre los valores de la variable reactiva rides que esta vinculada al datatable
     rides.value.map((ride, index) => {
+        // solo se toma en cuenta el ride cuyo id se ha modificado
         if (ride.id === newData.id) {
+            // se le asigna el nuevo valor para que el datatable se actualice
             rides.value[index] = newData;
         }
     });
@@ -216,8 +223,10 @@ const bookingFilter = () => {
                 >
                     <span>
                         {{
+                            drivers &&
+                            drivers.length &&
                             drivers.filter((driver) => {
-                                return (driver.id === data[field]);
+                                return driver.id === data[field];
                             })[0]?.full_name
                         }}
                     </span>
