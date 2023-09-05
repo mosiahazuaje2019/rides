@@ -13,6 +13,32 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\JsonResponse;
 
+function isAnAirport($param) {
+    $lines = array(
+        "Los Cabos International Airport (SJD), Carretera Transpeninsular, San José del Cabo, BCS, Mexico",
+        "San José del Cabo, Baja California Sur, México",
+        "Aeropuerto Internacional de Los Cabos (SJD), Carretera Transpeninsular, San José del Cabo, Baja California Sur, México",
+        "Los Cabos International Airport (SJD), Carretera Transpeninsular, San José del Cabo, Baja California Sur, México",
+        "Aeropuerto Internacional de Cabo San Lucas, Avenida Leona Vicario, Mesa Colorada, Cabo San Lucas, Baja California Sur, México",
+        "San Jose del Cabo Airport, Baja California Sur, México",
+        "Los Cabos Internationale Lufthavn (SJD), Carretera Transpeninsular, San José del Cabo, BCS, Mexico",
+        "San José del Cabo, BCS, Mexico",
+        "San Jose del Cabo Airport, 23429 B.C.S., Mexico",
+        "Los Cabos International Airport Road, El Salto, BCS, Mexico",
+        "Alaska Airlines - Los Cabos, Cabo San Lucas, BCS, Mexico",
+        "Cabo San Lucas, BCS, Mexico",
+        "Aeropuerto Internacional de Los Cabos (SJD), Carretera Transpeninsular, San José del Cabo, B.C.S., México"
+    );
+
+    foreach ($lines as $line) {
+        if ($line === $param) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 class BookingController extends Controller
 {
     protected $booking;
@@ -115,8 +141,7 @@ class BookingController extends Controller
 
         $serviceType = $request->input('transfer_type_name');
         $clientName = $request->input('meta')['client_contact_detail_first_name'] . " " . $request->input('meta')['client_contact_detail_last_name'];
-        // $hotel = $request->input('meta')['coordinate'][1]['address'];
-
+        
         $arrival_flight = $request->input('meta')['form_element_field'][0]['value'] . "#" . $request->input('meta')['form_element_field'][1]['value'];
         $departure_flight = $request->input('meta')['form_element_field'][2]['value'] . "#" . $request->input('meta')['form_element_field'][3]['value'];
 
@@ -125,7 +150,7 @@ class BookingController extends Controller
         $extras = $request->input('meta')['comment'];
 
         if ($serviceType === "One Way") {
-            if (strpos(strtolower($request->input('meta')['coordinate'][0]['address']), 'aeropuerto') == true) {
+            if (isAnAirport($request->input('meta')['coordinate'][0]['address']) == true) {
                 $service = "LLegada";
                 $hotel = $request->input('meta')['coordinate'][1]['address'];
 
@@ -137,7 +162,7 @@ class BookingController extends Controller
                 $booking->hotel = $hotel;
                 $booking->flight = $arrival_flight;
                 $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
-                $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
+                $booking->time = $pickup_time;
                 $booking->extras = $extras;
                 $booking->save();
             } else {
@@ -152,7 +177,7 @@ class BookingController extends Controller
                 $booking->hotel = $hotel;
                 $booking->flight = $departure_flight;
                 $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
-                $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
+                $booking->time = $pickup_time;
                 $booking->save();
             }
         } else if ($serviceType === "Round Trip") {
@@ -167,7 +192,7 @@ class BookingController extends Controller
             $booking->hotel = $hotel;
             $booking->flight = $arrival_flight;
             $booking->date = Carbon::parse($pickup_date)->format('Y-m-d');
-            $booking->time = Carbon::parse($pickup_time)->format('H:i:s');
+            $booking->time = $pickup_time;
             $booking->save();
 
 
@@ -183,7 +208,7 @@ class BookingController extends Controller
             $booking->hotel = $hotel;
             $booking->flight = $departure_flight;
             $booking->date = Carbon::parse($return_date)->format('Y-m-d');
-            $booking->time = Carbon::parse($return_time)->format('H:i:s');
+            $booking->time = $return_time;
             $booking->save();
         }
 

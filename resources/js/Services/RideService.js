@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 
 class RideService {
     static getRides() {
@@ -12,7 +13,25 @@ class RideService {
     }
 
     static async updateRide(ride) {
-        await axios.put(`/api/v1/bookings/${ride.id}`, ride);
+        try {
+            await axios.put(`/api/v1/bookings/${ride.id}`, ride);
+
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Ride was successfully edited",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } catch (e) {
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Error while trying to update the ride",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
     }
 
     static async createRide(ride) {
