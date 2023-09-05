@@ -53,22 +53,6 @@ let modalDisplay = ref(false);
 let contains = ref();
 let filters = ref();
 
-// let form = {
-//     id: null,
-//     request_id: null,
-//     driver_id: null,
-//     pax: null,
-//     service: null,
-//     client_name: null,
-//     hotel: null,
-//     flight: null,
-//     date: null,
-//     time: null,
-//     agency: null,
-//     status: null,
-//     extras: null,
-// };
-
 onMounted(() => {
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
