@@ -61,6 +61,10 @@ class UserController extends Controller
      */
     public function update(UserUpdateResquest $request, User $user): JsonResponse
     {
+        $userData = $request->all();
+
+        $userData['password'] !== null ? $userData['password'] = Hash::make($userData['password']) : null;
+
         $user->update($request->all());
         return response()->json(new UserResource($user));
     }
