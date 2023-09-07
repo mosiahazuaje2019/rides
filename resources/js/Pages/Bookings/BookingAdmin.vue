@@ -59,10 +59,13 @@ onMounted(() => {
 
 const createBooking = (bookingForm) => {
     RideService.createRide(bookingForm);
+
     modalDisplay.value = false;
+
     RideService.getRides().then((data) => {
         rides.value = data;
     });
+
     toast.add({
         severity: "info",
         summary: "Info",

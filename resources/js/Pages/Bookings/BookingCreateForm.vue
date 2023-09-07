@@ -152,7 +152,11 @@ const props = defineProps({
             </div>
             <div class="relative mt-4 flex-auto" data-te-input-wrapper-init>
                 <label for="time"> Time </label>
-                <Calendar v-model="form.time" timeOnly />
+                <InputMask
+                    v-model="form.time"
+                    mask="99:99"
+                    placeholder="23:00"
+                />
                 <span
                     v-if="error_time"
                     class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
