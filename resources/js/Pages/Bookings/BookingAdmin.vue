@@ -129,6 +129,10 @@ const bookingFilter = () => {
         rides.value = data;
     });
 };
+
+const deleteBooking = (bookingId) => {
+    RideService.deleteBooking(bookingId)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -282,6 +286,11 @@ const bookingFilter = () => {
                 style="width: 10%; min-width: 8rem"
                 bodyStyle="text-align:center"
             ></Column>
+            <Column bodyStyle="justify-center" header="Acción" headerStyle="width: 14rem; justify-center">
+                <template #body="slotProps">
+                    <PrimeButton @click="deleteBooking(slotProps.data.id)" icon="pi pi-trash" class="buttonDelete" title="Borrar Experiencia" />
+                </template>
+            </Column>
         </DataTable>
     </div>
 </template>

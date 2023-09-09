@@ -68,6 +68,33 @@ class RideService {
 
         return [];
     }
+
+    static async deleteBooking(bookingId) {
+        Swal.fire( {
+            title: 'Sure you want to delete the ride?',
+            showDenyButton: true,
+            confirmButtonText: `Delete`,
+            denyButtonText: `Cancel`,
+        }).then((result) => {
+            if(result.isConfirmed) {
+                axios.delete(`/api/v1/bookings/${bookingId}`).then(() => {
+                    //Buscar manera  de emitir reload al componente padre
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Ride was successfully deleted",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                }).catch(() => {
+                    console.log(error);
+                    Swal.fire('No se logro eliminar', '', 'error')
+                })
+            } else if (result.isDenied) {
+                Swal.fire('No se ha borrado...', '', 'info')
+            }
+        })
+    }
 }
 
 export { RideService };
