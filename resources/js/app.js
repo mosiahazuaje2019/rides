@@ -37,6 +37,7 @@ import Chip from "primevue/chip";
 import MultiSelect from "primevue/multiselect";
 import Avatar from "primevue/avatar";
 import Password from 'primevue/password';
+import Chart from 'primevue/chart';
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
@@ -87,6 +88,7 @@ createInertiaApp({
             .component("MultiSelect", MultiSelect)
             .component("Avatar", Avatar)
             .component("Password", Password)
+            .component("Chart", Chart)
             .use(PrimeVue)
             .use(ToastService)
             .use(plugin)

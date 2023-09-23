@@ -30,4 +30,17 @@ class Booking extends Model
         return $this->belongsTo(User::class, 'driver_id', 'id');
     }
 
+    //Query Scopes
+    public function scopeDrivers($query, $driver_id){
+        if($driver_id !== null) {
+            return $query->where('driver_id',$driver_id);
+        }
+    }
+
+    public function scopeRideDates($query, $dateIni, $dateEnd) {
+        if((isset($dateIni)) &&  (isset($dateEnd))) {
+            return $query->whereBetween('date',[$dateIni,$dateEnd]);
+        }
+    }
+
 }

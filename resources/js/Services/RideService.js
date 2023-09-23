@@ -35,7 +35,25 @@ class RideService {
     }
 
     static async createRide(ride) {
-        await axios.post(`/api/v1/bookings/`, ride);
+        try {
+            await axios.post(`/api/v1/bookings/`, ride);
+            
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Ride was successfully created",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } catch (e) {
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Error while trying to create the ride",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
     }
 
     static async getRideByDate(date) {
@@ -70,30 +88,7 @@ class RideService {
     }
 
     static async deleteBooking(bookingId) {
-        Swal.fire( {
-            title: 'Sure you want to delete the ride?',
-            showDenyButton: true,
-            confirmButtonText: `Delete`,
-            denyButtonText: `Cancel`,
-        }).then((result) => {
-            if(result.isConfirmed) {
-                axios.delete(`/api/v1/bookings/${bookingId}`).then(() => {
-                    //Buscar manera  de emitir reload al componente padre
-                    Swal.fire({
-                        position: "top-end",
-                        icon: "success",
-                        title: "Ride was successfully deleted",
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                }).catch(() => {
-                    console.log(error);
-                    Swal.fire('No se logro eliminar', '', 'error')
-                })
-            } else if (result.isDenied) {
-                Swal.fire('No se ha borrado...', '', 'info')
-            }
-        })
+        return await axios.delete(`/api/v1/bookings/${bookingId}`)
     }
 }
 
