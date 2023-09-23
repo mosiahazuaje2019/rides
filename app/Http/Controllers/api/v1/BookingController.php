@@ -141,7 +141,7 @@ class BookingController extends Controller
 
         $serviceType = $request->input('transfer_type_name');
         $clientName = $request->input('meta')['client_contact_detail_first_name'] . " " . $request->input('meta')['client_contact_detail_last_name'];
-        
+
         $arrival_flight = $request->input('meta')['form_element_field'][0]['value'] . "#" . $request->input('meta')['form_element_field'][1]['value'];
         $departure_flight = $request->input('meta')['form_element_field'][2]['value'] . "#" . $request->input('meta')['form_element_field'][3]['value'];
 
@@ -213,5 +213,23 @@ class BookingController extends Controller
         }
 
         return response()->json();
+    }
+
+    public function filterByCriteria(Request $request) {
+
+        $rides = Booking::orderBy('id','desc')
+            ->drivers($request->driver)
+            ->rideDates($request->dateini,$request->dateend)
+            ->get();
+
+        return response()->json(
+            new BookingCollection($rides)
+        );
+    }
+
+    public function filterByDriver(Request $request){
+        $rides = Booking::orderBy('id','desc')
+            ->drivers($request->driver)
+            ->get();
     }
 }

@@ -11,6 +11,7 @@ import { DriverService } from "@/Services/DriverService";
 import BookingCreateForm from "./BookingCreateForm.vue";
 import { useToast } from "primevue/usetoast";
 import moment from "moment-timezone";
+import Swal from "sweetalert2";
 
 const toast = useToast();
 
@@ -62,7 +63,7 @@ const createBooking = (bookingForm) => {
 
     modalDisplay.value = false;
 
-    RideService.getRides().then((data) => {
+    RideService.getRideByDate(bookingForm.date).then((data) => {
         rides.value = data;
     });
 
@@ -129,6 +130,43 @@ const bookingFilter = () => {
         rides.value = data;
     });
 };
+
+const deleteBooking = async (bookingId) => {
+    Swal.fire( {
+            title: 'Sure you want to delete the ride?',
+            showDenyButton: true,
+            confirmButtonText: `Delete`,
+            denyButtonText: `Cancel`,
+        }).then(async(result) => {
+            if(result.isConfirmed) {
+                await RideService.deleteBooking(bookingId).then(() => {
+                Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Ride was successfully deleted",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    rides.value.map((ride, index) => {
+                        // solo se toma en cuenta el ride cuyo id se ha modificado
+                        if (ride.id === bookingId) {
+                            rides.value.splice(index,1);
+                            // se le asigna el nuevo valor para que el datatable se actualice
+                            //rides.value[index] = newData;
+                        }
+                    });
+                }).catch(() => {
+                    console.log(error);
+                    Swal.fire('No se logro eliminar', '', 'error')
+                })
+            } else if (result.isDenied) {
+                Swal.fire('No se ha borrado...', '', 'info')
+            }
+    })
+
+
+
+}
 </script>
 
 <style lang="scss" scoped>
@@ -152,7 +190,8 @@ const bookingFilter = () => {
         />
     </Dialog>
 
-    <div class="card px-4">
+
+    <div class="card">
         <div class="flex justify-end mb-2 mt-2">
             <span class="p-input-icon-left w-full">
                 <InputText
@@ -282,6 +321,11 @@ const bookingFilter = () => {
                 style="width: 10%; min-width: 8rem"
                 bodyStyle="text-align:center"
             ></Column>
+            <Column bodyStyle="justify-center" header="Acción" headerStyle="width: 14rem; justify-center">
+                <template #body="slotProps">
+                    <PrimeButton @click="deleteBooking(slotProps.data.id)" icon="pi pi-trash" class="buttonDelete" title="Borrar Experiencia" />
+                </template>
+            </Column>
         </DataTable>
     </div>
 </template>

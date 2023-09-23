@@ -32,9 +32,9 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    // Route::get('/dashboard', function () {
-    //     return Inertia::render('Dashboard');
-    // })->name('dashboard');
+/*      Route::get('/dashboard', function () {
+         return Inertia::render('Dashboard');
+     })->name('dashboard'); */
     Route::get('/dashboard', function () { return Inertia::render('Bookings/index'); })->name('dashboard');
     Route::get('/booking', function () { return Inertia::render('Bookings/index'); })->name('booking');
     Route::get('user', function () { return Inertia::render('Users/index'); })->name('user');
@@ -47,10 +47,12 @@ Route::group(['prefix' => 'api/v1'], function () {
     //User custom routes GET
     Route::get('get_drivers', [UserController::class,'get_drivers']);
 
-
-    // Route::get('filterByDate', [BookingController::class,'filterByDate']);
+    //Booking custom routes GET
     Route::get('filterByDate', [BookingController::class, 'filterByDate']);
     Route::get('filterContains', [BookingController::class, 'filterContains']);
+
+    //Booking custom route GET open parameters
+    Route::get('filterByCriteria', [BookingController::class, 'filterByCriteria']);
 
     //Booking custom routes POST
     Route::post('cabosrwh', [BookingController::class,'cabosrwh']);

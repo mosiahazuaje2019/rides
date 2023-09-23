@@ -35,7 +35,25 @@ class RideService {
     }
 
     static async createRide(ride) {
-        await axios.post(`/api/v1/bookings/`, ride);
+        try {
+            await axios.post(`/api/v1/bookings/`, ride);
+            
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Ride was successfully created",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        } catch (e) {
+            Swal.fire({
+                position: "top-end",
+                icon: "error",
+                title: "Error while trying to create the ride",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        }
     }
 
     static async getRideByDate(date) {
@@ -67,6 +85,10 @@ class RideService {
             });
 
         return [];
+    }
+
+    static async deleteBooking(bookingId) {
+        return await axios.delete(`/api/v1/bookings/${bookingId}`)
     }
 }
 
