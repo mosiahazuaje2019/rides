@@ -190,8 +190,6 @@ const deleteBooking = async (bookingId) => {
         />
     </Dialog>
 
-
-    <div class="card">
         <div class="flex justify-end mb-2 mt-2">
             <span class="p-input-icon-left w-full">
                 <InputText
@@ -199,6 +197,7 @@ const deleteBooking = async (bookingId) => {
                     type="text"
                     placeholder="filter by ID or Client"
                     v-on:keyup.enter="bookingFilter"
+                    class="w-full"
                 />
                 <Button
                     label="Filter"
@@ -220,11 +219,11 @@ const deleteBooking = async (bookingId) => {
                     showButtonBar
                     @date-select="onBookingFilterByDate"
                     dateFormat="dd/mm/yy"
-                    class="float-right mr-2"
+                    class="float-right mr-2 w-full"
                 />
             </span>
         </div>
-
+        <div class="card">
         <DataTable
             v-model:filters="filters"
             v-model:editingRows="editingRows"
@@ -236,6 +235,9 @@ const deleteBooking = async (bookingId) => {
             tableStyle="max-width: 150rem"
             scrollable
             scrollHeight="400px"
+            resizableColumns
+            columnResizeMode="expand"
+            class="p-datatable-sm"
         >
             <Column
                 v-for="col of columns"
