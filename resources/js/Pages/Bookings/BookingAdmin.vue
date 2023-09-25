@@ -190,38 +190,36 @@ const deleteBooking = async (bookingId) => {
         />
     </Dialog>
 
-        <div class="flex justify-end mb-2 mt-2">
-            <span class="p-input-icon-left w-full">
-                <InputText
-                    v-model="contains"
-                    type="text"
-                    placeholder="filter by ID or Client"
-                    v-on:keyup.enter="bookingFilter"
-                    class="w-full"
-                />
+        <div class="grid grid-cols-3 p-1">
+            <div class="p-inputgroup flex-1">
                 <Button
                     label="Filter"
                     aria-label="Filter"
-                    class="ml-2"
                     :onclick="bookingFilter"
                 />
-            </span>
-            <span class="p-input-icon-left w-full">
-                <Button
-                    icon="pi pi-plus"
-                    aria-label="New"
-                    class="float-right"
-                    :onclick="() => (modalDisplay = true)"
+                <InputText
+                    v-model="contains"
+                    type="text"
+                    placeholder="Filter by ID"
+                    v-on:keyup.enter="bookingFilter"
                 />
+            </div>
+            <div></div>
+            <div class="p-inputgroup flex-1">
                 <Calendar
+                    class="block w-64"
                     v-model="searchdate"
                     showIcon
                     showButtonBar
                     @date-select="onBookingFilterByDate"
                     dateFormat="dd/mm/yy"
-                    class="float-right mr-2 w-full"
                 />
-            </span>
+                <Button
+                    icon="pi pi-plus"
+                    aria-label="New"
+                    :onclick="() => (modalDisplay = true)"
+                />
+            </div>
         </div>
         <div class="card">
         <DataTable
@@ -301,6 +299,7 @@ const deleteBooking = async (bookingId) => {
                             v-model="data[field]"
                             dateFormat="dd/mm/yy"
                             showButtonBar
+                            class="w-full"
                         />
                         <InputMask
                             v-if="field === 'time'"
@@ -315,6 +314,7 @@ const deleteBooking = async (bookingId) => {
                         v-model="data[field]"
                         autofocus
                         class="w-full"
+                        size="small"
                     />
                 </template>
             </Column>
