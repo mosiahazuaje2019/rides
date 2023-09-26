@@ -190,7 +190,7 @@ const deleteBooking = async (bookingId) => {
         />
     </Dialog>
 
-        <div class="grid grid-cols-3 p-1">
+        <div class="grid grid-cols-4 p-1">
             <div class="p-inputgroup flex-1">
                 <Button
                     label="Filter"
@@ -204,6 +204,7 @@ const deleteBooking = async (bookingId) => {
                     v-on:keyup.enter="bookingFilter"
                 />
             </div>
+            <div></div>
             <div></div>
             <div class="p-inputgroup flex-1">
                 <Calendar
