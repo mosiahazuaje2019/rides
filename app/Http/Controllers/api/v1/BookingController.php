@@ -27,7 +27,9 @@ function isAnAirport($param) {
         "Los Cabos International Airport Road, El Salto, BCS, Mexico",
         "Alaska Airlines - Los Cabos, Cabo San Lucas, BCS, Mexico",
         "Cabo San Lucas, BCS, Mexico",
-        "Aeropuerto Internacional de Los Cabos (SJD), Carretera Transpeninsular, San José del Cabo, B.C.S., México"
+        "Aeropuerto Internacional de Los Cabos (SJD), Carretera Transpeninsular, San José del Cabo, B.C.S., México",
+        "Aeropuerto Internacional de Los Cabos (SJD), Carr. Transpeninsular Km 43.5, 23420 San José del Cabo, B.C.S., México",
+        "Los Cabos International Airport (SJD) (SJD), Carretera Transpeninsular, San José del Cabo, BCS, Mexico"
     );
 
     foreach ($lines as $line) {
