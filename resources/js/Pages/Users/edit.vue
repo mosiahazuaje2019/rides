@@ -1,86 +1,89 @@
 <template>
-    <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-3 gap-4">
-            <div class="relative mb-4" data-te-input-wrapper-init>
-                <label for="name"> Name </label>
-                <InputText
-                    type="text"
-                    v-model="form.name"
-                    placeholder="Name"
-                    class="w-full rounded"
-                />
-                <span
-                    v-if="error_name"
-                    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                    role="alert"
-                    >{{ error_name }}</span
-                >
-            </div>
-            <div class="relative mb-4" data-te-input-wrapper-init>
-                <label for="last_name"> Last name </label>
-                <InputText
-                    type="text"
-                    v-model="form.last_name"
-                    placeholder="Last name"
-                    class="w-full rounded"
-                />
-                <span
-                    v-if="error_last_name"
-                    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                    role="alert"
-                    >{{ error_last_name }}</span
-                >
-            </div>
-            <div class="relative mb-4" data-te-input-wrapper-init>
-                <label for="phone"> Phone number </label>
-                <InputText
-                    type="text"
-                    v-model="form.phone"
-                    placeholder="phone number"
-                    class="w-full rounded"
-                />
-                <span
-                    v-if="error_phone"
-                    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                    role="alert"
-                    >{{ error_phone }}</span
-                >
-            </div>
+
+    <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2 lg:col-span-1" data-te-input-wrapper-init>
+            <label for="name"> Name </label>
+            <InputText
+                type="text"
+                v-model="form.name"
+                placeholder="Name"
+                class="w-full rounded"
+            />
+            <span
+                v-if="error_name"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert"
+                >{{ error_name }}</span
+            >
         </div>
-        <div class="grid grid-cols-2 gap-4">
-            <div class="relative mb-6" data-te-input-wrapper-init>
-                <label for="profile"> Profile </label>
-                <Dropdown
-                    v-model="form.profile"
-                    :options="profiles"
-                    optionLabel="name"
-                    optionValue="id"
-                    placeholder="profile"
-                    class="w-full"
-                />
-                <span
-                    v-if="error_profile"
-                    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                    role="alert"
-                    >{{ error_profile }}</span
-                >
-            </div>
-            <div class="relative mb-6" data-te-input-wrapper-init>
-                <label for="email"> Email </label>
-                <InputText
-                    type="text"
-                    v-model="form.email"
-                    placeholder="Email address"
-                    class="w-full rounded"
-                />
-                <span
-                    v-if="error_email"
-                    class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                    role="alert"
-                    >{{ error_email }}</span
-                >
-            </div>
+        <div class="col-span-2 lg:col-span-1" data-te-input-wrapper-init>
+            <label for="last_name"> Last name </label>
+            <InputText
+                type="text"
+                v-model="form.last_name"
+                placeholder="Last name"
+                class="w-full rounded"
+            />
+            <span
+                v-if="error_last_name"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert"
+                >{{ error_last_name }}</span
+            >
         </div>
+        <div class="col-span-2 lg:col-span-1" data-te-input-wrapper-init>
+            <label for="phone"> Phone number </label>
+            <InputText
+                type="text"
+                v-model="form.phone"
+                placeholder="phone number"
+                class="w-full rounded"
+            />
+            <span
+                v-if="error_phone"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert"
+                >{{ error_phone }}</span
+            >
+        </div>
+        <div class="col-span-2 lg:col-span-1" data-te-input-wrapper-init>
+            <label for="profile"> Profile </label>
+            <Dropdown
+                v-model="form.profile"
+                :options="profiles"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="profile"
+                class="w-full"
+            />
+            <span
+                v-if="error_profile"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert"
+                >{{ error_profile }}</span
+            >
+        </div>
+    </div>
+    <div class="grid grid-cols-1 gap-4">
+        <div class="col-span-1 lg:col-span-1" data-te-input-wrapper-init>
+            <label for="email"> Email </label>
+            <InputText
+                type="text"
+                v-model="form.email"
+                placeholder="Email address"
+                class="w-full rounded"
+            />
+            <span
+                v-if="error_email"
+                class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                role="alert"
+                >{{ error_email }}</span
+            >
+        </div>
+    </div>
+
+
+
         <div class="grid grid-cols-2 gap-4">
             <div class="relative mb-6" data-te-input-wrapper-init>
                 <label for="password"> Ingrese su contraseña </label>
@@ -98,7 +101,6 @@
             </div>
         </div>
         <Button icon="pi pi-check" label="Guardar" @click="submit" />
-    </div>
 </template>
 
 <script>

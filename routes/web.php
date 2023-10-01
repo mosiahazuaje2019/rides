@@ -57,5 +57,8 @@ Route::group(['prefix' => 'api/v1'], function () {
     //Booking custom routes POST
     Route::post('cabosrwh', [BookingController::class,'cabosrwh']);
 
+    Route::get('report/{date?}', [BookingController::class, 'generatePDF']);
+
+
 
 });
