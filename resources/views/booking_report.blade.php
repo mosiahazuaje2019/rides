@@ -13,7 +13,7 @@
                 </th>
                 <th class="text-left">
                     <h3>{{ $title }}</h3>
-                    <h3>{{ $dateSelected }}</h3>
+                    <h3 class="text-center">{{ $dateSelected }}</h3>
                 </th>
                 <th class="text-center">
                     <img src="{{ public_path('images/logo_report.jpg')}}" alt="logo" width="180px">
@@ -27,14 +27,13 @@
         </thead>
         <tbody>
             <tr>
-                <th>Request</th>
+                <th>ID</th>
                 <th>Driver</th>
                 <th>Pax</th>
                 <th>Service</th>
                 <th>Cliente</th>
                 <th style="width:20%">Hotel</th>
                 <th>Flight</th>
-                <th>Date</th>
                 <th>Time</th>
                 <th>Agency</th>
                 <th>Status</th>
@@ -49,7 +48,6 @@
                 <td>{{ $booking->client_name }}</td>
                 <td>{{ substr($booking->hotel,0,20).'...' }}</td>
                 <td>{{ $booking->flight }}</td>
-                <td>{{ Carbon\Carbon::parse($booking->date)->format('d/m/y') }}</td>
                 <td>{{ Carbon\Carbon::parse($booking->time)->format('H:i') }}</td>
                 <td>{{ $booking->agency }}</td>
                 <td>{{ $booking->status }}</td>

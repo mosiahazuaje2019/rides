@@ -247,7 +247,6 @@ const deleteBooking = async (bookingId) => {
             tableClass="editable-cells-table"
             tableStyle="max-width: 150rem"
             scrollable
-            scrollHeight="400px"
             resizableColumns
             columnResizeMode="expand"
             class="p-datatable-sm"
