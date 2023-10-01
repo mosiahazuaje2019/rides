@@ -29,6 +29,11 @@ defineProps({
                 :paginator="true"
                 :rows="5"
                 responsiveLayout="scroll"
+                scrollable
+                scrollHeight="400px"
+                resizableColumns
+                columnResizeMode="expand"
+                class="p-datatable-sm"
             >
                 <Column field="full_name" header="Full name"></Column>
                 <Column field="phone" header="Phone"></Column>

@@ -40,12 +40,17 @@ const services = [
 let drivers = ref([]);
 let rides = ref([]);
 let searchdate = ref();
+let dateFilter= '';
 
 onMounted(() => {
     DriverService.getDrivers().then((data) => (drivers.value = data));
 });
 
 const onBookingFilterByDate = (date) => {
+    dateFilter = `${date.getFullYear()}-${
+            date.getMonth() + 1
+        }-${date.getDate()}`;
+
     RideService.getRideByDate(date).then((data) => {
         rides.value = data;
 
@@ -70,17 +75,26 @@ const onBookingFilterByDate = (date) => {
 
 <template>
     <div class="card px-4 rounded-md">
-        <div class="flex justify-end mb-2 mt-2">
-            <span class="p-input-icon-left w-full">
+        <div class="grid grid-cols-1 md:grid-cols-4 p-1">
+            <div>
+            </div>
+            <div>
+            </div>
+            <div>
+                <a :href="`/api/v1/report/${dateFilter}`" target="_blank">
+                    <i class="pi pi-file-pdf" style="font-size: 2rem"></i>
+                </a>
+            </div>
+            <div class="p-inputgroup flex-1">
                 <Calendar
+                    class="block w-64"
                     v-model="searchdate"
                     showIcon
                     showButtonBar
                     @date-select="onBookingFilterByDate"
                     dateFormat="dd/mm/yy"
-                    class="float-right mr-2"
                 />
-            </span>
+            </div>
         </div>
 
         <DataTable
@@ -89,6 +103,9 @@ const onBookingFilterByDate = (date) => {
             tableStyle="max-width: 150rem"
             scrollable
             scrollHeight="400px"
+            resizableColumns
+            columnResizeMode="expand"
+            class="p-datatable-sm"
         >
             <Column
                 v-for="col of columns"

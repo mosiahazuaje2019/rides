@@ -25,9 +25,9 @@ class Booking extends Model
     ];
 
 
-    function driver(): BelongsTo
+    function driver()
     {
-        return $this->belongsTo(User::class, 'driver_id', 'id');
+        return $this->belongsTo(User::class);
     }
 
     //Query Scopes

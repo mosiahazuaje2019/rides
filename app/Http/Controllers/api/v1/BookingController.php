@@ -10,7 +10,7 @@ use App\Http\Requests\Booking\BookingStoreRequest;
 use App\Http\Requests\Booking\BookingUpdateRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use PDF;
 use Illuminate\Http\JsonResponse;
 
 function isAnAirport($param) {
@@ -233,5 +233,23 @@ class BookingController extends Controller
         $rides = Booking::orderBy('id','desc')
             ->drivers($request->driver)
             ->get();
+    }
+
+    public function generatePDF(Request $request)
+    {
+        $bookings = Booking::
+        with(['driver'])
+        ->rideDates($request->date,$request->date)
+        ->get();
+
+        $data = [
+            'title' => 'Operaciones de servicios',
+            'dateSelected' => $request->date,$request->date,
+            'bookings' => $bookings
+        ];
+
+        $pdf = PDF::loadView('booking_report', $data)->setPaper('a4', 'landscape');
+
+        return $pdf->download('booking_report.pdf');
     }
 }
