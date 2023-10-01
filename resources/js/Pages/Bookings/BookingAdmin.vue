@@ -210,10 +210,13 @@ const deleteBooking = async (bookingId) => {
                     v-on:keyup.enter="bookingFilter"
                 />
             </div>
-            <div>
+            <div class="flex justify-center">
+                <a :href="`/api/v1/report/${dateFilter}`" target="_blank"  class="flex justify-center ml-1 mr-1 w-full px-6 py-1 text-blue-100 no-underline bg-blue-500 rounded hover:bg-blue-600 hover:underline hover:text-blue-200">
+                    <i class="pi pi-file-excel" style="font-size: 2rem"></i>
+                </a>
             </div>
-            <div>
-                <a :href="`/api/v1/report/${dateFilter}`" target="_blank">
+            <div class="flex justify-center">
+                <a :href="`/api/v1/report/${dateFilter}`" target="_blank"  class="flex justify-center ml-1 mr-1 w-full px-6 py-1 text-blue-100 no-underline bg-blue-500 rounded hover:bg-blue-600 hover:underline hover:text-blue-200">
                     <i class="pi pi-file-pdf" style="font-size: 2rem"></i>
                 </a>
             </div>
