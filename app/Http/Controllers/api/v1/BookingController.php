@@ -243,13 +243,13 @@ class BookingController extends Controller
         ->get();
 
         $data = [
-            'title' => 'Operaciones de servicios',
+            'title' => 'Operación de servicios',
             'dateSelected' => $request->date,$request->date,
             'bookings' => $bookings
         ];
 
         $pdf = PDF::loadView('booking_report', $data)->setPaper('a4', 'landscape');
 
-        return $pdf->download('booking_report.pdf');
+        return $pdf->download($request->date,$request->date.'.pdf');
     }
 }
