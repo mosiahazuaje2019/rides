@@ -237,19 +237,23 @@ class BookingController extends Controller
 
     public function generatePDF(Request $request)
     {
-        $bookings = Booking::
-        with(['driver'])
+        $bookings = Booking::orderBy('time','asc')
+        ->with(['driver'])
         ->rideDates($request->date,$request->date)
         ->get();
 
+        $dateFormat = strtotime($request->date);
         $data = [
             'title' => 'Operación de servicios',
-            'dateSelected' => $request->date,$request->date,
+            'dateSelected' => $request->date,
+            'dateFormated'=> $dateFormat,
             'bookings' => $bookings
         ];
 
         $pdf = PDF::loadView('booking_report', $data)->setPaper('a4', 'landscape');
 
-        return $pdf->download($request->date,$request->date.'.pdf');
+        $fileName = $request->date.'.pdf';
+
+        return $pdf->download($fileName);
     }
 }

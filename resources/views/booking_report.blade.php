@@ -12,8 +12,8 @@
                     <img src="{{ public_path('images/cabosr-logo.png')}}" alt="logo" width="280px">
                 </th>
                 <th class="text-left">
-                    <h3>{{ $title }}</h3>
-                    <h3 class="text-center">{{ $dateSelected }}</h3>
+                    <h3 class="text-center">{{ $title }}</h3>
+                    <h3 class="text-center">{{ Carbon\Carbon::parse($dateFormated)->format('d/m/Y') }}</h3>
                 </th>
                 <th class="text-center">
                     <img src="{{ public_path('images/logo_report.jpg')}}" alt="logo" width="180px">
